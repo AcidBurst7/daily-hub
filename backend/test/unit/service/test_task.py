@@ -1,5 +1,5 @@
-from backend.model.task import Task
-import backend.service.task as task_service
+from model.task import Task
+import service.task as task_service
 
 
 sample = Task(
@@ -13,7 +13,7 @@ sample = Task(
 )
 
 def test_create():
-    resp = task_service.test_create(sample)
+    resp = task_service.create(sample)
     assert resp == sample
 
 def test_get_exists():
