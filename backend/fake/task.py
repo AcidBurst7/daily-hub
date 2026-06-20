@@ -1,8 +1,9 @@
-from model.task import Task
+from backend.model.task import Task
 
 
 _tasks = [
     Task(
+        id=1,
         title="Простой питон",
         date_create="2026-06-20 15:03:00",
         task_text="Прочитать книгу 'Простой Python'",
@@ -11,6 +12,7 @@ _tasks = [
         board_id=1
     ),
     Task(
+        id=2,
         title="Паттерны проектирования Python",
         date_create="2026-06-20 15:03:00",
         task_text="Прочитать книгу 'Паттерны проектирования Python'",
@@ -19,6 +21,7 @@ _tasks = [
         board_id=1
     ),
     Task(
+        id=3,
         title="Алгоритмы Python",
         date_create="2026-06-20 15:03:00",
         task_text="Прочитать книгу 'Алгоритмы Python'",
@@ -27,6 +30,7 @@ _tasks = [
         board_id=1
     ),
     Task(
+        id=4,
         title="Пет-проект",
         date_create="2026-06-20 15:03:00",
         task_text="1. сделать модели. 2. сделать заполнение фиктивными данными",
@@ -40,10 +44,10 @@ def get_all() -> list[Task]:
     """Возврат всех задач"""
     return _tasks
 
-def get_one(title: str) -> Task:
+def get_one(id: int) -> Task:
     """Возврат конкретной задачи по заголовку"""
     for _task in _tasks:
-        if _task.title == title:
+        if _task.id == id:
             return _task
     return None
 
@@ -62,7 +66,7 @@ def replace(task: Task) -> Task:
     """Полная замена записи задачи"""
     return task
 
-def delete(task: Task) -> bool:
+def delete(id: int) -> bool:
     """Удаление задачи или возврат пустоты, 
     если не существует записи"""
-    return None
+    return True
