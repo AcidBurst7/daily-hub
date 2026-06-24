@@ -1,5 +1,6 @@
-from backend.model.task import Task
-import backend.fake.task as data
+from model.task import Task
+import fake.task as data
+
 
 def get_all() -> list[Task]:
     return data.get_all()

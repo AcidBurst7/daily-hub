@@ -1,4 +1,4 @@
-from backend.model.task import Task
+from model.task import Task
 
 
 _tasks = [

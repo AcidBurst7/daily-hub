@@ -1,5 +1,5 @@
 from model.task import Task
-import service.task as task_service
+from service import task as service
 
 
 sample = Task(
@@ -13,13 +13,13 @@ sample = Task(
 )
 
 def test_create():
-    resp = task_service.create(sample)
+    resp = service.create(sample)
     assert resp == sample
-
+    
 def test_get_exists():
-    resp = task_service.get_one(sample.id)
+    resp = service.get_one(sample.id)
     assert resp == sample
 
 def test_get_missing():
-    resp = task_service.get_one(111)
+    resp = service.get_one(111)
     assert resp is None
