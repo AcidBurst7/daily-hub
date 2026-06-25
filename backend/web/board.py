@@ -2,11 +2,11 @@ from fastapi import APIRouter
 
 from typing import Union
 
-import backend.fake.board as service
+import backend.data.board as service
 from backend.model.board import Board
 
 
-router = APIRouter(prefix="/board")
+router = APIRouter(prefix="/boards")
 
 @router.get("/")
 def get_all() -> list[Board]:
@@ -23,10 +23,6 @@ def create(board: Board) -> Board:
 @router.patch("/")
 def modify(board: Board) -> Board:
     return service.modify(board)
-
-@router.put("/")
-def replace(board: Board) -> Board:
-    return service.replace(board)
 
 @router.delete("/{id}")
 def delete(board: Board) -> bool:

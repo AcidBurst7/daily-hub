@@ -1,5 +1,5 @@
-from model.task import Task
-import fake.task as data
+from backend.model.task import Task
+import backend.data.task as data
 
 
 def get_all() -> list[Task]:
@@ -16,6 +16,3 @@ def modify(board: Task) -> Task:
 
 def replace(board: Task) -> Task:
     return data.replace(board)
-
-def delete(id: int) -> bool:
-    return data.delete(id)

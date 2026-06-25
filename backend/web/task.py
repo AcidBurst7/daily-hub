@@ -2,11 +2,11 @@ from fastapi import APIRouter
 
 from typing import Union
 
-import backend.fake.task as service
+import backend.service.task as service
 from backend.model.task import Task
 
 
-router = APIRouter(prefix="/task")
+router = APIRouter(prefix="/tasks")
 
 @router.get("/")
 def get_all() -> list[Task]:
@@ -23,10 +23,6 @@ def create(task: Task) -> Task:
 @router.patch("/")
 def modify(task: Task) -> Task:
     return service.modify(task)
-
-@router.put("/")
-def replace(task: Task) -> Task:
-    return service.replace(task)
 
 @router.delete("/{id}")
 def delete(task: Task) -> bool:
