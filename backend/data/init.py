@@ -1,25 +1,26 @@
 import os
 from pathlib import Path
-from sqlite3 import connect, Connection, Cursor, IntegrityError
+import sqlite3
 
-
-conn: Connection | None = None
-curs: Cursor | None = None
+conn = None
+curs = None
 
 def get_db(name: str | None = None, reset: bool = False):
     """Подключение к файлу БД SQLite"""
     global conn, curs
-    if conn:
-        if reset:
-            return
-        conn = None
-    if not name:
-        name = os.getenv("DAILYHUB_SQLITE_DB")
+
+    if conn is not None:
+        if not reset:
+            return conn
+        conn.close()
+
+    if name is None:
         top_dir = Path(__file__).resolve().parents[1]
         db_dir = top_dir / "db"
         db_name = "dailyhub.db"
-        db_path = str(db_dir / db_name)
-        name = os.getenv("DAILYHUB_SQLITE_DB", db_path)
-    conn = connect(name, check_same_thread=False)
+        name = os.getenv("DAILYHUB_SQLITE_DB", str(db_dir / db_name))
+
+    conn = sqlite3.connect(name, check_same_thread=False)
+    conn.row_factory = sqlite3.Row
     curs = conn.cursor()
-get_db()
+    return conn

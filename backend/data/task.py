@@ -1,20 +1,23 @@
 from backend.model.task import Task
-from .init import (conn, curs)
+from . import init
 from backend.errors import Missing
 
-curs.execute(
-    """
-    CREATE TABLE IF NOT EXISTS tasks(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT,
-        date_create TEXT,
-        task_text TEXT,
-        is_done INTEGER,
-        deadline_date TEXT,
-        board_id INTEGER
+def create_table():
+    init.curs.execute("DROP TABLE IF EXISTS tasks")
+    init.curs.execute(
+        """
+        CREATE TABLE tasks(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT,
+            date_create TEXT,
+            task_text TEXT,
+            is_done INTEGER,
+            deadline_date TEXT,
+            board_id INTEGER
+        )
+        """
     )
-    """
-)
+    init.conn.commit()
 
 def row_to_model(row: tuple) -> Task:
     return Task(
@@ -32,9 +35,9 @@ def model_to_dict(board: Task) -> dict:
 
 def get_one(id: int) -> Task:
     query = "SELECT * FROM tasks WHERE id = ?"
-    curs.execute(query, (id, ))
-    row = curs.fetchone()
-    conn.commit()
+    init.curs.execute(query, (id, ))
+    row = init.curs.fetchone()
+    init.conn.commit()
     if row:
         return row_to_model(row)
     else:
@@ -42,9 +45,9 @@ def get_one(id: int) -> Task:
 
 def get_all() -> list[Task]:
     query = "SELECT * FROM tasks"
-    curs.execute(query)
-    rows = list(curs.fetchall())
-    conn.commit()
+    init.curs.execute(query)
+    rows = list(init.curs.fetchall())
+    init.conn.commit()
     return [row_to_model(row) for row in rows]
 
 def create(task: Task) -> Task:
@@ -61,9 +64,9 @@ def create(task: Task) -> Task:
         )
     """
     params = model_to_dict(task)
-    curs.execute(query, params)
-    conn.commit()
-    return get_one(curs.lastrowid)
+    init.curs.execute(query, params)
+    init.conn.commit()
+    return get_one(init.curs.lastrowid)
 
 def modify(task: Task) -> Task:
     if not task: None
@@ -78,19 +81,18 @@ def modify(task: Task) -> Task:
         WHERE id = :id
     """
     params = model_to_dict(task)
-    curs.execute(query, params)
-    conn.commit()
-    if curs.rowcount == 1:
+    init.curs.execute(query, params)
+    init.conn.commit()
+    if init.curs.rowcount == 1:
         return get_one(task.id)
     else:
         raise Missing(msg=f"Такой задачи не существует")
 
 def delete(id: int):
-    if not id: return False
     query = "DELETE FROM tasks WHERE id = ?"
-    curs.execute(query, (id,))
-    conn.commit()
-    if curs.rowcount != 1:
+    init.curs.execute(query, (1,))
+    init.conn.commit()
+    if init.curs.rowcount != 1:
         raise Missing(msg=f"Такой задачи не существует.")
-    else:
-        return True
+    return True
+    

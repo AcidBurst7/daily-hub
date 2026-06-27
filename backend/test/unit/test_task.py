@@ -3,10 +3,14 @@ import pytest
 
 from backend.model.task import Task
 from backend.errors import Missing
-from backend.service import task as service
 
 os.environ["DAILYHUB_SQLITE_DB"] = ":memory:"
+from data import init
 from data import task
+
+
+init.get_db("test.db", reset=True)
+task.create_table()
 
 
 @pytest.fixture
@@ -22,23 +26,25 @@ def sample() -> Task:
     )
 
 def test_create(sample):
-    resp = service.create(sample)
+    resp = task.create(sample)
     assert resp == sample
     
 def test_get_one(sample):
-    resp = service.get_one(sample.id)
-    assert resp == sample
+    created = task.create(sample)
+    resp = task.get_one(created.id)
+    assert resp == created
 
 def test_get_one_missing():
     with pytest.raises(Missing):
-        _ = service.get_one(99999999)
+        _ = task.get_one(99999999)
 
 def test_modify(sample):
-    task.title = "Очень простой питон"
-    resp = service.modify(sample.id, sample)
-    assert resp == sample
+    created = task.create(sample)
+    created.title = "Очень простой питон"
+    resp = task.modify(created)
+    assert resp.title == "Очень простой питон"
 
-def test_modify_missing(sample):
+def test_modify_missing():
     thing: Task = Task(
                 id=999,
                 title="Тестовая задача",
@@ -49,11 +55,12 @@ def test_modify_missing(sample):
                 board_id=1
             )
     with pytest.raises(Missing):
-        _ = task.modify(thing.id, thing)
+        _ = task.modify(thing)
 
 def test_delete(sample):
-    resp = task.delete(sample.id)
-    assert resp is None
+    created = task.create(sample)
+    resp = task.delete(created.id)
+    assert resp is True
 
 def test_delete_missing(sample):
     with pytest.raises(Missing):
