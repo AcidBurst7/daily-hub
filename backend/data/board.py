@@ -1,6 +1,6 @@
-import sqlite3
+from .init import (conn, curs)
 from backend.model.board import Board
-from .init import conn, curs
+from backend.errors import Missing 
 
 curs.execute(
     """
@@ -13,27 +13,34 @@ curs.execute(
 
 def row_to_model(row: tuple) -> Board:
     (id, name) = row
-    return Board(id=id, name=name)
+    return Board(
+        id=id, 
+        name=name
+    )
 
 def model_to_dict(board: Board) -> dict:
     return board.model_dump()
 
 def get_one(id: int) -> Board:
-    query = "SELECT * FROM boards WHERE id=:id"
-    params = {"id": id}
-    curs.execute(query, params)
+    query = "SELECT * FROM boards WHERE id = ?"
+    curs.execute(query, (id,))
     row = curs.fetchone()
     conn.commit()
-    return row_to_model(row)
+    if row:
+        return row_to_model(row)
+    else:
+        raise Missing(msg=f"Такой доски не существует")
+    
 
 def get_all() -> list[Board]:
     query = "SELECT * FROM boards"
     curs.execute(query)
-    conn.commit()
     rows = list(curs.fetchall())
+    conn.commit()
     return [row_to_model(row) for row in rows]
 
-def create(board: Board):
+
+def create(board: Board) -> Board:
     query = """
         INSERT INTO boards (name) 
         VALUES (:name)
@@ -44,6 +51,7 @@ def create(board: Board):
     return get_one(curs.lastrowid)
 
 def modify(board: Board) -> Board:
+    if not board: return None
     query = """
         UPDATE boards SET
             name = :name
@@ -52,11 +60,17 @@ def modify(board: Board) -> Board:
     params = model_to_dict(board)
     curs.execute(query, params)
     conn.commit()
-    return get_one(board.id)
+    if curs.rowcount == 1:
+        return get_one(board.id)
+    else:
+        raise Missing(msg=f"Такой доски не существует")
 
-def delete(id: int) -> bool:
-    query = """DELETE FROM boards WHERE id=:id"""
-    params = {"id": id}
-    result = curs.execute(query, params)
+def delete(id: int):
+    if not id: return False
+    query = "DELETE FROM boards WHERE id = ?"
+    curs.execute(query, (id,))
     conn.commit()
-    return bool(result)
+    if curs.rowcount != 1:
+        return Missing(msg=f"Такой доски не существует.")
+    else:
+        return True

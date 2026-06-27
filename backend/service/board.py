@@ -13,5 +13,5 @@ def create(board: Board) -> Board:
 def modify(board: Board) -> Board:
     return data.modify(board)
 
-def delete(id: int) -> bool:
+def delete(id: int):
     return data.delete(id)

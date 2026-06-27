@@ -8,11 +8,11 @@ def get_all() -> list[Task]:
 def get_one(id: int) -> Task | None:
     return data.get_one(id)
 
-def create(board: Task) -> Task:
-    return data.create(board)
+def create(task: Task) -> Task:
+    return data.create(task)
 
-def modify(board: Task) -> Task:
-    return data.modify(board)
+def modify(task: Task) -> Task:
+    return data.modify(task)
 
-def replace(board: Task) -> Task:
-    return data.replace(board)
+def delete(id: int):
+    return data.delete(id)

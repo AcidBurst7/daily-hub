@@ -1,7 +1,6 @@
-import sqlite3
 from backend.model.task import Task
-from backend.model.board import Board
-from .init import conn, curs
+from .init import (conn, curs)
+from backend.errors import Missing
 
 curs.execute(
     """
@@ -32,12 +31,14 @@ def model_to_dict(board: Task) -> dict:
     return board.model_dump()
 
 def get_one(id: int) -> Task:
-    query = "SELECT * FROM tasks WHERE id=:id"
-    params = {"id": id}
-    curs.execute(query, params)
+    query = "SELECT * FROM tasks WHERE id = ?"
+    curs.execute(query, (id, ))
     row = curs.fetchone()
     conn.commit()
-    return row_to_model(row)
+    if row:
+        return row_to_model(row)
+    else:
+        raise Missing(msg=f"Такой задачи не существует")
 
 def get_all() -> list[Task]:
     query = "SELECT * FROM tasks"
@@ -46,7 +47,7 @@ def get_all() -> list[Task]:
     conn.commit()
     return [row_to_model(row) for row in rows]
 
-def create(task: Task) -> str:
+def create(task: Task) -> Task:
     query = """
         INSERT INTO tasks (
             title, date_create,
@@ -65,6 +66,7 @@ def create(task: Task) -> str:
     return get_one(curs.lastrowid)
 
 def modify(task: Task) -> Task:
+    if not task: None
     query = """
         UPDATE tasks SET
             title = :title, 
@@ -78,11 +80,17 @@ def modify(task: Task) -> Task:
     params = model_to_dict(task)
     curs.execute(query, params)
     conn.commit()
-    return get_one(task.id)
+    if curs.rowcount == 1:
+        return get_one(task.id)
+    else:
+        raise Missing(msg=f"Такой задачи не существует")
 
-def delete(id: int) -> bool:
-    query = """DELETE FROM tasks WHERE id=:id"""
-    params = {"id": id}
-    result = curs.execute(query, params)
+def delete(id: int):
+    if not id: return False
+    query = "DELETE FROM tasks WHERE id = ?"
+    curs.execute(query, (id,))
     conn.commit()
-    return bool(result)
+    if curs.rowcount != 1:
+        raise Missing(msg=f"Такой задачи не существует.")
+    else:
+        return True

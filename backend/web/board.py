@@ -1,29 +1,37 @@
-from fastapi import APIRouter
-
-from typing import Union
-
-import backend.data.board as service
+from fastapi import APIRouter, HTTPException
+import backend.service.board as service
 from backend.model.board import Board
+from backend.errors import Missing
 
 
 router = APIRouter(prefix="/boards")
+
 
 @router.get("/")
 def get_all() -> list[Board]:
     return service.get_all()
 
 @router.get("/{id}")
-def get_one(id: int) -> Union[Board, None]:
-    return service.get_one(id)
+def get_one(id: int) -> Board:
+    try:
+        return service.get_one(id)
+    except Missing as exc:
+        raise HTTPException(status_code=404, detail=exc.msg)
 
-@router.post("/")
+@router.post("/", status_code=201)
 def create(board: Board) -> Board:
     return service.create(board)
 
 @router.patch("/")
 def modify(board: Board) -> Board:
-    return service.modify(board)
+    try:
+        return service.modify(board)
+    except Missing as exc:
+        raise HTTPException(status_code=404, detail=exc.msg)
 
 @router.delete("/{id}")
-def delete(board: Board) -> bool:
-    return service.delete(board)
+def delete(id: int):
+    try:
+        return service.delete(id)
+    except Missing as exc:
+        raise HTTPException(status_code=404, detail=exc.msg)
