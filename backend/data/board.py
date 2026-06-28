@@ -2,15 +2,18 @@ from . import init
 from backend.model.board import Board
 from backend.errors import Missing 
 
-init.get_db()
-init.curs.execute(
-    """
-    CREATE TABLE IF NOT EXISTS boards(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT
+
+def create_table():
+    init.curs.execute("DROP TABLE IF EXISTS boards")
+    init.curs.execute(
+        """
+        CREATE TABLE IF NOT EXISTS boards(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT
+        )
+        """
     )
-    """
-)
+    init.conn.commit()
 
 def row_to_model(row: tuple) -> Board:
     (id, name) = row
@@ -67,11 +70,9 @@ def modify(board: Board) -> Board:
         raise Missing(msg=f"Такой доски не существует")
 
 def delete(id: int):
-    if not id: return False
     query = "DELETE FROM boards WHERE id = ?"
     init.curs.execute(query, (id,))
     init.conn.commit()
     if init.curs.rowcount != 1:
-        return Missing(msg=f"Такой доски не существует.")
-    else:
-        return True
+        raise Missing(msg=f"Такой доски не существует.")
+    return True

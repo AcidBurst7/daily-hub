@@ -91,7 +91,7 @@ def modify(task: Task) -> Task:
 
 def delete(id: int):
     query = "DELETE FROM tasks WHERE id = ?"
-    init.curs.execute(query, (1,))
+    init.curs.execute(query, (id,))
     init.conn.commit()
     if init.curs.rowcount != 1:
         raise Missing(msg=f"Такой задачи не существует.")
