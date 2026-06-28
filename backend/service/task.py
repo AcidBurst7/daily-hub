@@ -2,8 +2,10 @@ from backend.model.task import Task
 from backend.data import init
 from backend.data import task as data
 
+
 init.get_db()
-data.create_tables()
+data.create_table()
+
 
 def get_all() -> list[Task]:
     return data.get_all()

@@ -1,5 +1,11 @@
 from backend.model.board import Board
+from backend.data import init
 import backend.data.board as data
+
+
+init.get_db()
+data.create_table()
+
 
 def get_all() -> list[Board]:
     return data.get_all()

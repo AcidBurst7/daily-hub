@@ -4,7 +4,7 @@ from backend.model.board import Board
 from backend.errors import Missing
 
 
-router = APIRouter(prefix="/boards")
+router = APIRouter(prefix="/boards", tags=["Доски"])
 
 
 @router.get("/")

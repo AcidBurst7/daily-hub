@@ -4,7 +4,7 @@ from backend.model.task import Task
 from backend.errors import Missing
 
 
-router = APIRouter(prefix="/tasks")
+router = APIRouter(prefix="/tasks", tags=["Задачи"])
 
 
 @router.get("/")

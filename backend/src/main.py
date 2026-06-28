@@ -8,8 +8,9 @@ from backend.web import (
 
 app = FastAPI()
 # app.include_router(weather_forecast.router)
-app.include_router(task.router)
 app.include_router(board.router)
+app.include_router(task.router)
+
 
 if __name__ == "__main__":
     uvicorn.run("backend.src.main:app", reload=True)
