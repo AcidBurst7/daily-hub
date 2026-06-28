@@ -19,8 +19,9 @@ def get_db(name: str | None = None, reset: bool = False):
         db_dir = top_dir / "db"
         db_name = "dailyhub.db"
         name = os.getenv("DAILYHUB_SQLITE_DB", str(db_dir / db_name))
-
+    
     conn = sqlite3.connect(name, check_same_thread=False)
     conn.row_factory = sqlite3.Row
     curs = conn.cursor()
+
     return conn

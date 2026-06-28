@@ -1,3 +1,5 @@
+import os
+import sys
 import pytest
 from pathlib import Path
 
@@ -7,9 +9,10 @@ from backend.data import task as task_data
 
 @pytest.fixture(autouse=True)
 def test_db():
-    db = Path(__file__).parent / "test.db"
-
-    # 💣 УДАЛЯЕМ БД ДО теста
+    top_dir = Path(__file__).resolve().parents[1]
+    db_dir = top_dir / "db"
+    db = db_dir / "test.db"
+    
     if db.exists():
         db.unlink()
 
@@ -23,6 +26,5 @@ def test_db():
     init.conn = None
     init.curs = None
 
-    # 💣 УДАЛЯЕМ ПОСЛЕ теста
     if db.exists():
         db.unlink()

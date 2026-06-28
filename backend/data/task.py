@@ -2,6 +2,7 @@ from backend.model.task import Task
 from . import init
 from backend.errors import Missing
 
+
 def create_table():
     init.curs.execute("DROP TABLE IF EXISTS tasks")
     init.curs.execute(

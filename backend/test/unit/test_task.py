@@ -1,16 +1,8 @@
-import os
 import pytest
 
 from backend.model.task import Task
 from backend.errors import Missing
-
-os.environ["DAILYHUB_SQLITE_DB"] = ":memory:"
-from data import init
-from data import task
-
-
-init.get_db("test.db", reset=True)
-task.create_table()
+from backend.data import task
 
 
 @pytest.fixture
