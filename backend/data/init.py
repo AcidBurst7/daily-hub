@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-import sqlite3
+from sqlite3 import connect, Row, IntegrityError
 
 conn = None
 curs = None
@@ -20,8 +20,8 @@ def get_db(name: str | None = None, reset: bool = False):
         db_name = "dailyhub.db"
         name = os.getenv("DAILYHUB_SQLITE_DB", str(db_dir / db_name))
     
-    conn = sqlite3.connect(name, check_same_thread=False)
-    conn.row_factory = sqlite3.Row
+    conn = connect(name, check_same_thread=False)
+    conn.row_factory = Row
     curs = conn.cursor()
 
     return conn
