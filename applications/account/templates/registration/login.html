@@ -1,0 +1,51 @@
+{% extends "base_auth.html" %}
+{% load static %}
+{% block title %}DailyHub | Аутентификация{% endblock %}
+{% block content %}
+<div class="card card-md">
+    <div class="card-body">
+        <h2 class="h2 text-center mb-2">Пожалуйста, войдите в систему</h2>
+        <p class="text-center mb-4">
+            {% if form.errors %}
+                <span class="invalid-feedback d-block">
+                    Ваш логин или пароль введены неверно. <br>Попробуйте еще раз.
+                </span>
+            {% else %}
+                Пожалуйста, воспользуйтесь<br> формой для входа:
+            {% endif %}
+        </p>
+        <form action="{% url 'account:login' %}" method="post" autocomplete="off" novalidate="">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}" />
+            {% for field in form %}
+                <div class="mb-3">
+                    <div class="mb-2">{{ field.label_tag }}</div>
+                    {{ field }}
+                </div>
+            {% endfor %}
+            <div class="mb-4">
+                <label class="form-label">
+                    <span class="form-label-description">
+                    <a href="{% url 'account:password_reset' %}">
+                        Забыли пароль?
+                    </a>
+                    </span>
+                </label>
+            </div>
+            {% comment %} <div class="mb-2">
+                <label class="form-check">
+                    <input type="checkbox" class="form-check-input">
+                    <span class="form-check-label">Запомнить меня</span>
+                </label>
+            </div> {% endcomment %}
+            <div class="form-footer">
+                <button type="submit" class="btn btn-primary w-100">Войти</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="text-center text-secondary mt-3">
+    Еще не зарегистрированы? 
+    <a href="./sign-up.html" tabindex="-1">Регистрация</a>
+</div>
+{% endblock %}
