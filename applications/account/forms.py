@@ -1,50 +1,58 @@
 from django import forms
-from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import (
     AuthenticationForm, 
     PasswordChangeForm,
     PasswordResetForm,
-    SetPasswordForm
+    SetPasswordForm,
+    UserCreationForm
 )
+from django.contrib.auth.models import User
+from django.utils.safestring import mark_safe
 
-User = get_user_model()
 
-class UserRegistrationForm(forms.ModelForm):
-    password = forms.CharField(
-        label='Пароль',
-        widget=forms.PasswordInput
+class UserRegistrationForm(UserCreationForm):
+    email = forms.EmailField(
+        required=True, 
+        label="Email",
+        widget=forms.EmailInput(attrs={'class': 'form-control'}),
+    )
+    first_name = forms.CharField(
+        required=True, 
+        label="Имя",
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+    )
+    username = forms.CharField(
+        required=True, 
+        label="Логин",
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+    )
+    password1 = forms.CharField(
+        label="Пароль",
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
     )
     password2 = forms.CharField(
-        label='Повторите пароль',
-        widget=forms.PasswordInput
+        label="Повторите пароль",
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
     )
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        for field in self.fields.values():
-            field.widget.attrs["class"] = "form-control"
+    
+    # Добавляем обязательный чекбокс со ссылками на документы
+    agree_to_terms = forms.BooleanField(
+        required=True,  # Делает поле обязательным для заполнения
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        label=mark_safe(
+            'Регистрируясь, я принимаю условия <a href="/terms/" target="_blank">Пользовательского соглашения</a> '
+            'и даю согласие на обработку моих персональных данных в соответствии с '
+            '<a href="/privacy/" target="_blank">Политикой конфиденциальности</a>.'
+        )
+    )
 
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'email']
-
-    def clean_password2(self):
-        cd = self.cleaned_data
-        if cd['password'] != cd['password2']:
-            raise forms.ValidationError('Пароли не совпадают!')
-        return cd['password2']
-    
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.set_password(
-            self.cleaned_data['password']
+        fields = (
+            "username",
+            "first_name",
+            "email",
         )
-
-        if commit:
-            user.save()
-
-        return user
     
 
 class LoginForm(AuthenticationForm):
