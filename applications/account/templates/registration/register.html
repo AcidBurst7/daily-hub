@@ -1,0 +1,42 @@
+{% extends "base_auth.html" %}
+{% load static %}
+{% block title %}DailyHub | Регистрация{% endblock %}
+{% block content %}
+<div class="card card-md">
+    <div class="card-body">
+        <h2 class="h2 text-center mb-2">
+            Регистрация
+        </h2>
+        <p class="text-center mb-4">
+            Зарегистрироваться можно здесь, <br>
+            воспользовавшись формой регистрации ниже.
+        </p>
+        <form method="post" autocomplete="off" novalidate="">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}" />
+            
+            {% for field in form %}
+                <div class="mb-3">
+                    <div class="mb-2">{{ field.label_tag }}</div>
+                    {{ field }}
+                </div>
+
+                {% if field.help_text %}
+                    <div class="form-hint">
+                        {{ field.help_text|safe }}
+                    </div>
+                {% endif %}
+
+                {% for error in field.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ error }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+            <div class="form-footer">
+                <button type="submit" class="btn btn-primary w-100">Зарегистрироваться</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
