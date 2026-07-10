@@ -68,6 +68,7 @@ urlpatterns = [
         name='password_reset_complete'
     ),
     path('register/', views.register, name="register"),
+    path('profile/', views.profile_edit, name="profile_edit"),
     path("", views.dashboard, name="dashboard"),
 ]
 

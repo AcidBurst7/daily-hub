@@ -8,6 +8,36 @@ from django.contrib.auth.forms import (
 )
 from django.contrib.auth.models import User
 from django.utils.safestring import mark_safe
+from .models import Profile
+
+
+class UserEditForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'email']
+        help_texts = {
+            'username': 'Ваш никнейм',
+            'email': 'Ваш e-mail',
+        }
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs.update({
+                'class': 'form-control'
+            })
+
+class ProfileEditForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['photo']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs.update({
+                'class': 'form-control'
+            })
 
 
 class UserRegistrationForm(UserCreationForm):
@@ -34,8 +64,6 @@ class UserRegistrationForm(UserCreationForm):
         label="Повторите пароль",
         widget=forms.PasswordInput(attrs={'class': 'form-control'}),
     )
-    
-    # Добавляем обязательный чекбокс со ссылками на документы
     agree_to_terms = forms.BooleanField(
         required=True,  # Делает поле обязательным для заполнения
         widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}),
