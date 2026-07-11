@@ -7,7 +7,7 @@
                 <h2 class="page-title">Задачи</h2>
             </div>
             <div class="col-auto ms-auto d-print-none">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createBoardModal">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" 
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-2">
                         <path d="M12 5l0 14"></path>
@@ -15,31 +15,35 @@
                     </svg>
                     Создать доску
                 </button>
-                <!-- Modal -->
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal fade" id="createBoardModal" tabindex="-1" aria-labelledby="createBoardModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Новая доска</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="mb-3">
-                                <label class="form-label">Название</label>
-                                <input type="text" class="form-control" name="example-text-input" placeholder="Название вашей новой доски">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Новая доска</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
                             </div>
-                        </div>
-                        <div class="modal-footer">
-                            <a href="#" class="btn btn-link link-secondary btn-3" data-bs-dismiss="modal"> Выход </a>
-                                <a href="#" class="btn btn-primary btn-5 ms-auto" data-bs-dismiss="modal">
-                                <!-- Download SVG icon from http://tabler.io/icons/icon/plus -->
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-2">
-                                    <path d="M12 5l0 14"></path>
-                                    <path d="M5 12l14 0"></path>
-                                </svg>
-                                Создать новую доску
-                                </a>
-                            </div>
+                            <form id="createBoardForm" method="post" action="{% url 'tasks:create_board' %}">
+                                {% csrf_token %}
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        {% comment %} <label class="form-label">Название</label> {% endcomment %}
+                                        <p>{{ create_board_form.name.label }}</p>
+                                        {{ create_board_form.name }}
+                                        {% comment %} <input type="text" class="form-control" name="example-text-input" placeholder="Название вашей новой доски"> {% endcomment %}
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <a href="#" class="btn btn-link link-secondary btn-3" data-bs-dismiss="modal"> Выход </a>
+                                    <button type="submit" class="btn btn-primary btn-5 ms-auto">
+                                        <!-- Download SVG icon from http://tabler.io/icons/icon/plus -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-2">
+                                            <path d="M12 5l0 14"></path>
+                                            <path d="M5 12l14 0"></path>
+                                        </svg>
+                                        Создать новую доску
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -49,25 +53,35 @@
 
     <div class="page-body">
         <div class="container-xl">
-            {% if data %}
-                <ul class="nav nav-bordered mb-4">
+            <ul class="nav nav-bordered mb-4">
+                {% for board in boards %}
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Доска 1</a>
+                        {% comment %} <a class="nav-link active" aria-current="page" href="#"> {% endcomment %}
+                        <a class="nav-link" aria-current="page" href="#">
+                            {{ board.name }}
+                        </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Доска 2</a>
-                    </li>
-                </ul>
-                <div class="row">
-                    <div class="col-12 col-md-6 col-lg">
-                        <h2 class="mb-3">Колонка 1</h2>
+                {% empty %}
+                    Здесь пока еще ничего не создано. Попробуй создать свою первую доску 
+                {% endfor %}
+            </ul>
+
+            <div class="row">
+                <div class="col-12 col-md-6 col-lg">
+                    {% for column in columns %}
+                        <h2 class="mb-3">{{ column.name }}</h2>
                         <div class="mb-4">
                             <div class="row row-cards">
+                                {% for task in column.tasks.all %}
                                 <div class="col-12">
                                     <div class="card card-sm">
                                         <div class="card-body">
-                                        <h3 class="card-title">User should receive a daily digest email</h3>
-                                        <div class="text-secondary">Dedicated form for a category of users that will perform actions.</div>
+                                        <h3 class="card-title">
+                                            {{ task.title }}
+                                        </h3>
+                                        <div class="text-secondary">
+                                            {{ task.description }}
+                                        </div>
                                         <div class="mt-4">
                                             <div class="row">
                                                 <div class="col-auto">
@@ -81,65 +95,24 @@
                                                         <path d="M11 15h1"></path>
                                                         <path d="M12 15v3"></path>
                                                     </svg>
-                                                    10 Sep
+                                                    {{ task.deadline }}
                                                     </a>
                                                 </div>
-                                                <div class="col-auto">
-                                                    <a href="#" class="link-secondary">
-                                                    <!-- Download SVG icon from http://tabler.io/icons/icon/message -->
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
-                                                        <path d="M8 9h8"></path>
-                                                        <path d="M8 13h6"></path>
-                                                        <path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12z"></path>
-                                                    </svg>
-                                                    4
-                                                    </a>
-                                                </div>
-                                                
                                             </div>
                                         </div>
                                         </div>
                                     </div>
                                 </div>
+                                {% empty %}
+                                    Здесь пока еще ничего не создано. Попробуй создать свою первую задачу
+                                {% endfor %}
                             </div>
                         </div>
-                    </div>
-                    <div class="col-12 col-md-6 col-lg">
-                        <h2 class="mb-3">In Progress</h2>
-                        <div class="mb-4">
-                        <div class="row row-cards">
-                            
-                        </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-6 col-lg">
-                        <h2 class="mb-3">Test</h2>
-                        <div class="mb-4">
-                        <div class="row row-cards">
-                            
-                        </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-6 col-lg">
-                        <h2 class="mb-3">Completed</h2>
-                        <div class="mb-4">
-                        <div class="row row-cards">
-                            
-                        </div>
-                        </div>
-                    </div>
+                    {% empty %}
+                        Здесь пока еще ничего не создано. Попробуй создать свою первую колонку 
+                    {% endfor %}
                 </div>
-            {% else %}
-                Здесь пока еще ничего не создано. Попробуй создать свою первую доску 
-            {% endif %}
+            </div>
         </div>
     </div>
-    <script>
-        const myModal = document.getElementById('myModal')
-        const myInput = document.getElementById('myInput')
-
-        myModal.addEventListener('shown.bs.modal', () => {
-            myInput.focus()
-        })
-    </script>
 {% endblock %}

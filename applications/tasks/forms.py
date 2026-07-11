@@ -1,7 +1,7 @@
 from django import forms
 
 
-class BoardEditForm(forms.ModelForm):
+class BoardEditForm(forms.Form):
     name = forms.CharField(
         required=True, 
         label="Название доски",
