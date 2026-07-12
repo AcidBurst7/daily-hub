@@ -53,65 +53,145 @@
 
     <div class="page-body">
         <div class="container-xl">
-            <ul class="nav nav-bordered mb-4">
-                {% for board in boards %}
-                    <li class="nav-item">
-                        {% comment %} <a class="nav-link active" aria-current="page" href="#"> {% endcomment %}
-                        <a class="nav-link" aria-current="page" href="#">
+            <ul class="nav nav-pills mb-3" id="pills-tabBoards" role="tablist">
+                {% for board in boards.all %}
+                    <li class="nav-item" role="presentation">
+                        {% if forloop.first %}
+                            <button class="nav-link active" type="button"
+                                    id="pills-board-{{ board.id }}-tab" 
+                                    data-bs-toggle="pill" 
+                                    data-bs-target="#pills-board-{{ board.id }}" 
+                                    aria-controls="pills-board-{{ board.id }}"
+                                    role="tab" aria-selected="true">
+                        {% else %}
+                            <button class="nav-link" type="button"
+                                    id="pills-board-{{ board.id }}-tab" 
+                                    data-bs-toggle="pill" 
+                                    data-bs-target="#pills-board-{{ board.id }}" 
+                                    aria-controls="pills-board-{{ board.id }}"
+                                    role="tab" aria-selected="false">
+                        {% endif %}
                             {{ board.name }}
-                        </a>
+                        </button>
                     </li>
                 {% empty %}
                     Здесь пока еще ничего не создано. Попробуй создать свою первую доску 
                 {% endfor %}
             </ul>
 
-            <div class="row">
-                <div class="col-12 col-md-6 col-lg">
-                    {% for column in columns %}
-                        <h2 class="mb-3">{{ column.name }}</h2>
-                        <div class="mb-4">
-                            <div class="row row-cards">
-                                {% for task in column.tasks.all %}
-                                <div class="col-12">
-                                    <div class="card card-sm">
-                                        <div class="card-body">
-                                        <h3 class="card-title">
-                                            {{ task.title }}
-                                        </h3>
-                                        <div class="text-secondary">
-                                            {{ task.description }}
-                                        </div>
-                                        <div class="mt-4">
-                                            <div class="row">
-                                                <div class="col-auto">
-                                                    <a href="#" class="link-warning">
-                                                    <!-- Download SVG icon from http://tabler.io/icons/icon/calendar -->
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
-                                                        <path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z"></path>
-                                                        <path d="M16 3v4"></path>
-                                                        <path d="M8 3v4"></path>
-                                                        <path d="M4 11h16"></path>
-                                                        <path d="M11 15h1"></path>
-                                                        <path d="M12 15v3"></path>
-                                                    </svg>
-                                                    {{ task.deadline }}
-                                                    </a>
+            <!-- Отображение колонок с задачами -->
+            <div class="tab-content" id="pills-tabContent">
+                {% for board in boards.all %}
+                    {% if forloop.first %}
+                        <div class="tab-pane fade show active" 
+                            id="pills-board-{{ board.id }}" 
+                            role="tabpanel" 
+                            aria-labelledby="pills-board-{{ board.id }}" 
+                            tabindex="0">
+                    {% else %}
+                        <div class="tab-pane fade" 
+                            id="pills-board-{{ board.id }}" 
+                            role="tabpanel" 
+                            aria-labelledby="pills-board-{{ board.id }}" 
+                            tabindex="0">
+                    {% endif %}
+                        
+                        <div class="row" style="overflow-x: auto; overflow-y: hidden;">
+                            {% for column in board.columns.all %}
+                            <div class="col-12 col-md-6 col-lg">
+                                <h2 class="mb-3">{{ column.name }}</h2>
+                                <div class="mb-4">
+                                    <div class="row row-cards">
+                                        {% for task in column.tasks.all %}
+                                        <div class="col-12">
+                                            <div class="card card-sm">
+                                                <div class="card-body">
+                                                    <h3 class="card-title">
+                                                        {{ task.title }}
+                                                    </h3>
+                                                    <div class="text-secondary">
+                                                        {{ task.description }}
+                                                    </div>
+                                                    <div class="mt-4">
+                                                        <div class="row">
+                                                            <div class="col-auto">
+                                                                <a href="#" class="link-warning">
+                                                                <!-- Download SVG icon from http://tabler.io/icons/icon/calendar -->
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
+                                                                    <path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z"></path>
+                                                                    <path d="M16 3v4"></path>
+                                                                    <path d="M8 3v4"></path>
+                                                                    <path d="M4 11h16"></path>
+                                                                    <path d="M11 15h1"></path>
+                                                                    <path d="M12 15v3"></path>
+                                                                </svg>
+                                                                {{ task.deadline }}
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+
+                            <!-- Кнопка создания новой колонки -->
+                            <div class="col">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" 
+                                        data-bs-target="#createColumnBoard{{ board.id }}Modal">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" 
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-2">
+                                        <path d="M12 5l0 14"></path>
+                                        <path d="M5 12l14 0"></path>
+                                    </svg>
+                                    Добавить еще одну колонку
+                                </button>
+                                <div class="modal fade" id="createColumnBoard{{ board.id }}Modal" tabindex="-1" 
+                                    aria-labelledby="createColumnBoard{{ board.if }}ModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Новая колонка</h5>
+                                                <button type="button" class="btn-close" 
+                                                        data-bs-dismiss="modal" 
+                                                        aria-label="Закрыть"></button>
+                                            </div>
+                                            <form id="createColumnBoard{{ board.id }}Form" method="post" 
+                                                action="{% url 'tasks:create_column' board_id=board.id %}">
+                                                {% csrf_token %}
+                                                <div class="modal-body">
+                                                    <div class="mb-3">
+                                                        <p>{{ create_column_form.name.label }}</p>
+                                                        {{ create_column_form.name }}
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <a href="#" class="btn btn-link link-secondary btn-3" 
+                                                        data-bs-dismiss="modal"> Выход </a>
+                                                    <button type="submit" class="btn btn-primary btn-5 ms-auto">
+                                                        <!-- Download SVG icon from http://tabler.io/icons/icon/plus -->
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" 
+                                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" 
+                                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+                                                                class="icon icon-2">
+                                                            <path d="M12 5l0 14"></path>
+                                                            <path d="M5 12l14 0"></path>
+                                                        </svg>
+                                                        Создать новую колонку
+                                                    </button>
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
-                                {% empty %}
-                                    Здесь пока еще ничего не создано. Попробуй создать свою первую задачу
-                                {% endfor %}
                             </div>
                         </div>
-                    {% empty %}
-                        Здесь пока еще ничего не создано. Попробуй создать свою первую колонку 
-                    {% endfor %}
-                </div>
+                    </div>
+                {% endfor %}
             </div>
         </div>
     </div>

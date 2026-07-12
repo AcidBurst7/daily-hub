@@ -7,3 +7,10 @@ class BoardEditForm(forms.Form):
         label="Название доски",
         widget=forms.TextInput(attrs={'class': 'form-control'}),
     )
+
+class ColumnEditForm(forms.Form):
+    name = forms.CharField(
+        required=True, 
+        label="Название колонки",
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+    )
