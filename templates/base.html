@@ -4,10 +4,10 @@
 <html>
 <head>
     <title>{% block title %}{% endblock %}</title>
-    <link href="{% static 'lib/bootstrap/dist/css/bootstrap-grid.min.css' %}" rel="stylesheet">
-    <link href="{% static 'lib/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+    {% comment %} <link href="{% static 'lib/bootstrap/dist/css/bootstrap-grid.min.css' %}" rel="stylesheet"> {% endcomment %}
+    {% comment %} <link href="{% static 'lib/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet"> {% endcomment %}
     <link href="{% static 'css/tabler.min.css' %}" rel="stylesheet">
-    {% comment %} <link href="{% static 'css/base.css' %}" rel="stylesheet"> {% endcomment %}
+    <link href="{% static 'css/base.css' %}" rel="stylesheet">
 
 </head>
 <body hx-headers='{"x-csrftoken": "{{ csrf_token }}"}'>
@@ -99,7 +99,7 @@
     </div>
     {% endif %}
 			
-    <script src="{% static 'lib/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+    {% comment %} <script src="{% static 'lib/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script> {% endcomment %}
     <script src="{% static 'js/tabler.min.js' %}"></script>
 </body>
 </html>

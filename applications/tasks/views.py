@@ -59,6 +59,23 @@ def create_board(request):
         }
     )
 
+@login_required
+def edit_board(request, board_id: int):
+    if request.method == 'POST':
+        create_board_form = BoardEditForm(request.POST)
+        if create_board_form.is_valid():
+            cleaned_data = create_board_form.cleaned_data
+            board = Board.objects.filter(id=board_id).first()
+            board.name = cleaned_data["name"]
+            board.save()
+            return redirect("tasks:index")
+
+@login_required
+def delete_board(request, board_id: int):
+    if request.method == 'POST':
+        Board.objects.filter(id=board_id).delete()
+        return redirect("tasks:index")
+
 
 @login_required
 def create_column(request, board_id: int):
@@ -73,8 +90,25 @@ def create_column(request, board_id: int):
             )
             new_colum.save()
             return redirect("tasks:index")
-    return render(request, 'tasks/index.html', {
-            'create_column_form': ColumnEditForm(),
-            'data': get_user_boards(request.user),
-        }
-    )
+    # return render(request, 'tasks/index.html', {
+    #         'create_column_form': ColumnEditForm(),
+    #         'data': get_user_boards(request.user),
+    #     }
+    # )
+
+@login_required
+def edit_column(request, column_id: int):
+    if request.method == 'POST':
+        create_column_form = ColumnEditForm(request.POST)
+        if create_column_form.is_valid():
+            cleaned_data = create_column_form.cleaned_data
+            column = Column.objects.filter(id=column_id).first()
+            column.name = cleaned_data["name"]
+            column.save()
+            return redirect("tasks:index")
+        
+@login_required
+def delete_column(request, column_id: int):
+    if request.method == 'POST':
+        Column.objects.filter(id=column_id).delete()
+        return redirect("tasks:index")
