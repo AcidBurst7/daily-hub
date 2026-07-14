@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load static %}
+{%block title %}Создание задачи{% endblock %}
+{% block content %}
+<div class="page-header d-print-none" aria-label="Создание задачи">
+    <div class="container-xl">
+    <div class="row g-2 align-items-center">
+        <div class="col">
+        <h2 class="page-title">Создание задачи</h2>
+        </div>
+    </div>
+    </div>
+</div>
+<div class="page-body">
+    <div class="container-xl">
+        <div class="row row-cards">
+            <form method="post" action="">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label class="form-label">{{ form.title.label }}</label>
+                    {{ form.title }}
+                    {{ form.title.errors }}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">{{ form.description.label }}</label>
+                    {{ form.description }}
+                    {{ form.description.errors }}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Цвет карточки</label>
+                    <div class="d-flex flex-wrap gap-2">
+                        <label class="form-colorinput">
+                            <input type="radio" name="color" value="#ffffff"
+                                class="form-colorinput-input"
+                                {% if form.color.value == "#ffffff" or not form.color.value %}checked{% endif %}>
+                            <span class="form-colorinput-color bg-white border"></span>
+                        </label>
+
+                        <label class="form-colorinput">
+                            <input type="radio" name="color" value="#0d6efd"
+                                class="form-colorinput-input"
+                {% if form.color.value == "#0d6efd" %}checked{% endif %}>
+                <span class="form-colorinput-color bg-blue"></span>
+                </label>
+
+                        <label class="form-colorinput">
+                            <input type="radio" name="color" value="#198754"
+                                class="form-colorinput-input"
+                                {% if form.color.value == "#198754" %}checked{% endif %}>
+                            <span class="form-colorinput-color bg-green"></span>
+                        </label>
+
+                        <label class="form-colorinput">
+                            <input type="radio" name="color" value="#ffc107"
+                                class="form-colorinput-input"
+                                {% if form.color.value == "#ffc107" %}checked{% endif %}>
+                            <span class="form-colorinput-color bg-yellow"></span>
+                        </label>
+
+                        <label class="form-colorinput">
+                            <input type="radio" name="color" value="#dc3545"
+                                class="form-colorinput-input"
+                                {% if form.color.value == "#dc3545" %}checked{% endif %}>
+                            <span class="form-colorinput-color bg-red"></span>
+                        </label>
+
+                        <label class="form-colorinput">
+                            <input type="radio" name="color" value="#6f42c1"
+                                class="form-colorinput-input"
+                                {% if form.color.value == "#6f42c1" %}checked{% endif %}>
+                            <span class="form-colorinput-color bg-purple"></span>
+                        </label>
+
+                        <label class="form-colorinput">
+                            <input type="radio" name="color" value="#fd7e14"
+                                class="form-colorinput-input"
+                                {% if form.color.value == "#fd7e14" %}checked{% endif %}>
+                            <span class="form-colorinput-color bg-orange"></span>
+                        </label>
+
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">{{ form.deadline.label }}</label>
+                    {{ form.deadline }}
+                    {{ form.deadline.errors }}
+                </div>
+
+                {% comment %} <div class="form-check mb-4">
+                    {{ form.is_archived }}
+                    <label class="form-check-label">
+                        Архивировать задачу
+                    </label>
+                </div> {% endcomment %}
+
+                <div class="d-flex justify-content-end align-items-center">
+                    <a href="{% url 'tasks:index' %}">
+                        Выйти
+                    </a>
+                    <button type="submit" class="btn btn-primary ms-4">
+                        Сохранить
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

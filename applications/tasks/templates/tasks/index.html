@@ -8,7 +8,7 @@
                 <h2 class="page-title">Задачи</h2>
             </div>
             <div class="col-auto ms-auto d-print-none">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createBoardModal">
+                <button type="button" class="btn btn-outline btn-primary" data-bs-toggle="modal" data-bs-target="#createBoardModal">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" 
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-2">
                         <path d="M12 5l0 14"></path>
@@ -58,21 +58,56 @@
                 data-bs-toggle="tabs" role="tablist">
                 {% for board in boards.all %}
                     <li class="nav-item" role="presentation">
-                        {% if forloop.first %}
-                            <a href="#tabs-board-{{ board.id }}"
-                                class="nav-link active"
-                                data-bs-toggle="tab"
-                                role="tab" 
-                                aria-selected="true">
-                        {% else %}
-                            <a  href="#tabs-board-{{ board.id }}"
-                                class="nav-link"
-                                data-bs-toggle="tab"
-                                role="tab" 
-                                aria-selected="false">
-                        {% endif %}
-                            {{ board.name }}
-                        </a>
+                        <div class="d-flex align-items-center">
+                            {% if forloop.first %}
+                                <a href="#tabs-board-{{ board.id }}"
+                                    class="nav-link active tasks-tab-board"
+                                    data-bs-toggle="tab"
+                                    role="tab" 
+                                    aria-selected="true">
+                            {% else %}
+                                <a  href="#tabs-board-{{ board.id }}"
+                                    class="nav-link tasks-tab-board"
+                                    data-bs-toggle="tab"
+                                    role="tab" 
+                                    aria-selected="false">
+                            {% endif %}
+                                {{ board.name }}
+                            </a>
+                            <div class="d-flex flex-row tasks-actions-board">
+                                <a href="{% url 'tasks:edit_board' board_id=board.id %}"
+                                    class="ps-1 ">
+                                    <svg class="icon icon-tabler icons-tabler-outline icon-tabler-pencil block-title__icon"
+                                        xmlns="http://www.w3.org/2000/svg" color="grey" 
+                                        width="24" height="24" viewBox="0 0 24 24" fill="none" 
+                                        stroke="currentColor" stroke-width="2" 
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+                                        <path d="M13.5 6.5l4 4" />
+                                    </svg>
+                                </a>
+                                <a href="#" class="ps-1">
+                                    <form action="{% url 'tasks:delete_board' board_id=board.id %}" 
+                                        method="post"> 
+                                        {% csrf_token %}
+                                        <button type="submit" style="border:none;background:none;padding:0;">   
+                                            <svg xmlns="http://www.w3.org/2000/svg" color="grey" 
+                                                width="24" height="24" viewBox="0 0 24 24" fill="none" 
+                                                stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+                                                stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <path d="M4 7l16 0" />
+                                                <path d="M10 11l0 6" />
+                                                <path d="M14 11l0 6" />
+                                                <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                                                <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                                            </svg>
+                                        </button>
+                                    </form>
+                                </a>
+                            </div>
+                        </div>
                     </li>
                 {% empty %}
                     Здесь пока еще ничего не создано. Попробуй создать свою первую доску 
@@ -99,25 +134,98 @@
                                 <h2 class="mb-0 block-title">
                                     {{ column.name }}
                                 </h2>
-                                <a href="#" class="ps-1 block-title__icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" color="grey" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-pencil">
+                                <a href="{% url 'tasks:edit_column' column_id=column.id %}" class="ps-1">
+                                    <svg class="icon icon-tabler icons-tabler-outline icon-tabler-pencil block-title__icon"
+                                        xmlns="http://www.w3.org/2000/svg" color="grey" 
+                                        width="24" height="24" viewBox="0 0 24 24" fill="none" 
+                                        stroke="currentColor" stroke-width="2" 
+                                        stroke-linecap="round" stroke-linejoin="round">
                                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                         <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
                                         <path d="M13.5 6.5l4 4" />
                                     </svg>
                                 </a>
+                                <a href="#" class="ps-1">
+                                    <form action="{% url 'tasks:delete_column' column_id=column.id %}" 
+                                        method="post"> 
+                                        {% csrf_token %}
+                                        <button type="submit" style="border:none;background:none;padding:0;">   
+                                            <svg xmlns="http://www.w3.org/2000/svg" color="grey" 
+                                                width="24" height="24" viewBox="0 0 24 24" fill="none" 
+                                                stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+                                                stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <path d="M4 7l16 0" />
+                                                <path d="M10 11l0 6" />
+                                                <path d="M14 11l0 6" />
+                                                <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                                                <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                                            </svg>
+                                        </button>
+                                    </form>
+                                </a>
+                                <a href="{% url 'tasks:create_task' column_id=column.id %}" class="ps-1" title="Добавить задачу">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" 
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" color="grey"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+                                        class="icon icon-tabler icons-tabler-outline icon-tabler-playlist-add">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M19 8h-14" />
+                                        <path d="M5 12h9" />
+                                        <path d="M11 16h-6" />
+                                        <path d="M15 16h6" />
+                                        <path d="M18 13v6" />
+                                    </svg>
+                                </a>
                             </div>
-                            
-
-                            <div class="mb-4">
+                        
+                            <div class="mb-4 mt-4 py-3 ps-0 pe-4">
                                 <div class="row row-cards">
                                     {% for task in column.tasks.all %}
-                                    <div class="col-12">
+                                    <div class="col-12 mb-4">
                                         <div class="card card-sm">
+                                            <div class="card-status-top" style="background-color: color-mix(in srgb, {{task.color}} 100%, transparent) !important"></div>
                                             <div class="card-body">
-                                                <h3 class="card-title">
-                                                    {{ task.title }}
-                                                </h3>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <h3 class="card-title">
+                                                            {{ task.title }}
+                                                        </h3>
+                                                    </div>
+                                                    <div class="col-auto d-flex">
+                                                        <a href="{% url 'tasks:edit_task' task_id=task.id %}" class="ps-1">
+                                                            <svg class="icon icon-tabler icons-tabler-outline icon-tabler-pencil block-title__icon"
+                                                                xmlns="http://www.w3.org/2000/svg" color="grey" 
+                                                                width="24" height="24" viewBox="0 0 24 24" fill="none" 
+                                                                stroke="currentColor" stroke-width="2" 
+                                                                stroke-linecap="round" stroke-linejoin="round">
+                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                                <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+                                                                <path d="M13.5 6.5l4 4" />
+                                                            </svg>
+                                                        </a>
+                                                        <a href="#" class="ps-1">
+                                                            <form action="{% url 'tasks:delete_task' task_id=task.id %}" 
+                                                                method="post"> 
+                                                                {% csrf_token %}
+                                                                <button type="submit" style="border:none;background:none;padding:0;">   
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" color="grey" 
+                                                                        width="24" height="24" viewBox="0 0 24 24" fill="none" 
+                                                                        stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+                                                                        stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
+                                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                                        <path d="M4 7l16 0" />
+                                                                        <path d="M10 11l0 6" />
+                                                                        <path d="M14 11l0 6" />
+                                                                        <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                                                                        <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                                                                    </svg>
+                                                                </button>
+                                                            </form>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                
                                                 <div class="text-secondary">
                                                     {{ task.description }}
                                                 </div>
@@ -144,13 +252,15 @@
                                     </div>
                                     {% endfor %}
                                 </div>
+
+                                
                             </div>
                         </div>
                         {% endfor %}
 
                         <!-- Кнопка создания новой колонки -->
-                        <div style="width: 350px">
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" 
+                        <div style="col-lg-4 col-md-6 col-xs-12 col-sm-12 order-sm-1">
+                            <button type="button" class="btn btn-outline btn-primary" data-bs-toggle="modal" 
                                     data-bs-target="#createColumnBoard{{ board.id }}Modal">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" 
                                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-2">

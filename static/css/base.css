@@ -1,3 +1,20 @@
-.block-title > .block-title__icon  {
-  display: none;
+.block-title {
+  position: relative;
+  cursor: pointer;
+}
+
+.block-title .block-title__icon  {
+  opacity: 0 !important; /* Иконка скрыта по умолчанию */
+  visibility: hidden !important; /* Полностью убирает элемент из потока */
+  transition: opacity 0.3s ease, visibility 0.3s ease !important; /* Плавное появление */
+
+}
+
+.block-title:hover .block-title__icon {
+  opacity: 1 !important; /* Иконка становится видимой */
+  visibility: visible !important;
+}
+
+.tasks-tab-board:hover + .tasks-actions-board {
+  visibility: visible !important;
 }
