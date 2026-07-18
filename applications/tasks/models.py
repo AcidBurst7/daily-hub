@@ -51,3 +51,22 @@ class Task(models.Model):
     
     class Meta:
         ordering = ["order"]
+
+class CheckList(models.Model):
+    task = models.ForeignKey(
+        Task, 
+        on_delete=models.CASCADE, 
+        related_name="tasks"
+    )
+    name = models.CharField(max_length=100)
+
+
+class CheckListItem(models.Model):
+    checklist = models.ForeignKey(
+        CheckList, 
+        on_delete=models.CASCADE, 
+        related_name="checklists"
+    )
+    title = models.CharField(max_length=250)
+    done = models.BooleanField(default=False)
+    
