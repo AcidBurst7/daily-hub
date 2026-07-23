@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Task
+from .models import Task, CheckList, CheckListItem
 
 
 class BoardEditForm(forms.Form):
@@ -70,3 +70,40 @@ class TaskEditForm(forms.ModelForm):
             self.initial["deadline"] = self.instance.deadline.strftime(
                 "%Y-%m-%dT%H:%M"
             )
+
+
+class ChecklistEditForm(forms.ModelForm):
+    class Meta:
+        model = CheckList
+        fields = ["task", "name"]
+        labels = {
+            "task": "",
+            "name": "Название"
+        }
+        widgets = {
+            "task": forms.TextInput(
+                attrs={"class": "form-control"}
+            ),
+            "name": forms.TextInput(
+                attrs={"class": "form-control"}
+            )
+        }
+
+class ChecklistItemEditForm(forms.ModelForm):
+    class Meta:
+        model = CheckListItem
+        fields = ["checklist", "title", "done"]
+        labels = {
+            "checklist": "",
+            "title": "Название",
+            "done": "",
+        }
+        widgets = {
+            "task": forms.HiddenInput(),
+            "title": forms.TextInput(
+                attrs={"class": "form-control"}
+            ),
+            "done": forms.CheckboxInput(
+                attrs={"class": "form-control"}
+            )
+        }

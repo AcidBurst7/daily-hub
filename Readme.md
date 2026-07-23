@@ -162,24 +162,6 @@ http://127.0.0.1:8000/
 
 ---
 
-## 📚 Изученные технологии
-
-В ходе разработки проекта были использованы:
-
-* Django ORM
-* Django Authentication
-* Class-Based Views
-* Function-Based Views
-* Django Templates
-* Static & Media Files
-* Миграции
-* Работа с моделями
-* Связи `ForeignKey` и `OneToOne`
-* Загрузка изображений
-* Авторизация пользователей
-
----
-
 ## 🤝 Вклад в проект
 
 Если у вас есть идеи по улучшению проекта — создавайте **Issue** или отправляйте **Pull Request**.

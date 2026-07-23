@@ -1,7 +1,13 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Board, Column, Task
-from .forms import BoardEditForm, ColumnEditForm, TaskEditForm
+from .forms import (
+    BoardEditForm, 
+    ColumnEditForm, 
+    TaskEditForm,
+    ChecklistEditForm,
+    ChecklistItemEditForm,
+)
 
 def get_user_boards(user):
     return (
@@ -125,18 +131,23 @@ def create_task(request, column_id: int):
     
     if request.method == "POST":
         form = TaskEditForm(request.POST)
+        form_checklist = ChecklistEditForm(request.POST)
+        form_checklistitem = ChecklistItemEditForm(request.POST)
 
         if form.is_valid():
             task = form.save(commit=False)
             task.column = column
             task.order = column.tasks.count()  # добавляем в конец списка
             task.save()
-
             return redirect("tasks:index")
     
     form = TaskEditForm()
+    form_checklist = ChecklistEditForm()
+    form_checklistitem = ChecklistItemEditForm()
     return render(request, 'tasks/forms/edit_task.html', {
-            'form': form
+            'form': form,
+            'form_checklist': form_checklist,
+            'form_checklistitem': form_checklistitem
         }
     )
 

@@ -65,7 +65,7 @@ class CheckListItem(models.Model):
     checklist = models.ForeignKey(
         CheckList, 
         on_delete=models.CASCADE, 
-        related_name="checklists"
+        related_name="checklist"
     )
     title = models.CharField(max_length=250)
     done = models.BooleanField(default=False)
