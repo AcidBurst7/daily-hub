@@ -62,6 +62,8 @@ Board
 
 ## 🚀 Запуск проекта
 
+Django-приложение переведено с SQLite на PostgreSQL, база запущена через Docker.
+
 ### 1. Клонировать репозиторий
 
 ```bash
@@ -149,14 +151,14 @@ http://127.0.0.1:8000/
 [x] CRUD задач
 [x] CRUD досок
 [x] CRUD колонок
+[x] Docker
+[x] PostgreSQL
 
 [ ] Чек-листы
 [ ] Поиск
 [ ] Фильтрация
 [ ] Dashboard
 [ ] История изменений
-[ ] Docker
-[ ] PostgreSQL
 [ ] README
 [ ] Deploy
 
