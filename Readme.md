@@ -1,181 +1,267 @@
 # 🚀 Daily Hub
 
-> **Daily Hub** — современное веб-приложение для управления задачами в формате **Kanban**, созданное на **Django**.
+Daily Hub — веб-приложение для управления задачами в формате Kanban.
+
+Проект разработан на Django и предназначен для организации личных задач: создание досок, колонок и карточек задач, установка сроков выполнения и управление статусами.
+
+Проект разворачивается с использованием Docker, PostgreSQL и Gunicorn.
 
 ---
 
 ## ✨ Возможности
 
-* 👤 Регистрация и авторизация пользователей
-* 📝 Управление личным профилем
-* 🖼️ Загрузка фотографии профиля
-* 📋 Создание нескольких досок (Boards)
-* 📂 Организация задач по колонкам
-* ✅ Создание, редактирование и удаление задач
-* 🎨 Цветовые метки задач
-* 📅 Установка дедлайнов
-* 🗄️ Архивирование задач
-* 🔒 Доступ только к собственным данным пользователя
+### Пользователи
+
+- Регистрация пользователей
+- Авторизация
+- Личный профиль
+- Загрузка фотографии профиля
+- Разграничение доступа к пользовательским данным
+
+
+### Kanban-доски
+
+- Создание нескольких досок
+- Создание колонок внутри досок
+- Создание задач
+- Редактирование задач
+- Удаление задач
+- Цветовые метки
+- Дедлайны
+- Архивирование задач
+
 
 ---
 
-## 🛠️ Стек технологий
+# 🛠 Технологический стек
 
-### Backend
+## Backend
 
-* 🐍 Python 3
-* 🌿 Django
-* 🗄️ SQLite (на этапе разработки)
+- Python 3.12
+- Django 5.2
+- Django ORM
+- Django Authentication
+- PostgreSQL
 
-### Frontend
 
-* 🌐 HTML5
-* 🎨 CSS3
-* ⚡ JavaScript
+## Frontend
 
-### Дополнительно
+- HTML5
+- CSS3
+- JavaScript
+- Django Templates
 
-* 📷 Pillow
-* 🔐 Django Authentication
-* 📁 Django Media & Static Files
+
+## Инфраструктура
+
+- Docker
+- Docker Compose
+- Gunicorn
+- PostgreSQL
+
+
+## Дополнительно
+
+- Pillow
+- django-environ
+- Git
+
 
 ---
 
-## 📂 Структура проекта
+# 🏗 Архитектура проекта
 
-```text
-Board
+Daily Hub
+
+Browser
+
+↓
+
+Gunicorn
+
+↓
+
+Django
+
+↓
+
+PostgreSQL
+
+
+
+В production окружении планируется:
+
+Browser
+
+↓
+
+Nginx
+
+↓
+
+Gunicorn
+
+↓
+
+Django
+
+↓
+
+PostgreSQL
+
+
+
+
+---
+
+# 📂 Структура проекта
+
+daily-hub/
+
+├── applications/
 │
-├── Column
-│   ├── Task
-│   ├── Task
-│   └── Task
+│ ├── account/
+│ │
+│ └── tasks/
 │
-└── Column
-    ├── Task
-    └── Task
-```
+├── config/
+│
+│ ├── settings.py
+│ ├── urls.py
+│ ├── wsgi.py
+│ └── asgi.py
+│
+├── static/
+│
+├── media/
+│
+├── templates/
+│
+├── Dockerfile
+├── docker-compose.yml
+├── requirements.txt
+├── manage.py
+└── README.md
 
-Каждый пользователь может иметь несколько досок, каждая доска содержит колонки, а каждая колонка — задачи.
+
+
 
 ---
 
-## 🚀 Запуск проекта
+# 🚀 Запуск проекта
 
-Django-приложение переведено с SQLite на PostgreSQL, база запущена через Docker.
 
-### 1. Клонировать репозиторий
+## 1. Клонирование
+
 
 ```bash
 git clone <repository_url>
+
 cd daily-hub
 ```
 
-### 2. Создать виртуальное окружение
+## 2. Создание файла окружения. Создать файл .env:
+
+DEBUG=True
+SECRET_KEY=your_secret_key
+DB_NAME=dailyhub
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_HOST=postgres
+DB_PORT=5432
+
+### Запуск через Docker
+
+Собрать контейнеры:
 
 ```bash
-python -m venv venv
+docker compose up --build
 ```
 
-### Windows
+После запуска приложение доступно: http://localhost:8000
+
+
+### Миграции
+
+Выполнить:
 
 ```bash
-venv\Scripts\activate
+docker exec -it dailyhub_web python manage.py migrate
 ```
 
-### Linux / macOS
-
+Создать администратора:
 ```bash
-source venv/bin/activate
+docker exec -it dailyhub_web python manage.py createsuperuser
 ```
-
----
-
-### 3. Установить зависимости
-
-```bash
-pip install -r requirements.txt
-```
-
----
-
-### 4. Выполнить миграции
-
-```bash
-python manage.py migrate
-```
-
----
-
-### 5. Создать суперпользователя
-
-```bash
-python manage.py createsuperuser
-```
-
----
-
-### 6. Запустить сервер
-
-```bash
-python manage.py runserver
-```
-
-Открыть в браузере:
-
-```text
-http://127.0.0.1:8000/
-```
-
----
 
 ## 📸 Скриншоты
+Главная страница
 
-> Здесь будут размещены изображения интерфейса проекта.
+Добавить изображение
+Kanban-доска
 
-* 🏠 Главная страница
-* 👤 Профиль пользователя
-* 📋 Канбан-доска
-* ✏️ Создание задачи
+Добавить изображение
+Профиль пользователя
 
----
+Добавить изображение
+
+## 🗄 База данных
+
+В проекте используется PostgreSQL. База данных запускается отдельным Docker-контейнером.
+
+Django
+ |
+ |
+PostgreSQL container
+
 
 ## 📌 План развития
-
-## Version 1.0
+Version 1.0
 
 [x] Регистрация
 [x] Авторизация
-[x] Профиль
-[x] Канбан
+[x] Профиль пользователя
+[x] Kanban-доски
 [x] CRUD задач
-[x] CRUD досок
 [x] CRUD колонок
-[x] Docker
 [x] PostgreSQL
+[x] Docker
 
+Version 1.1
 [ ] Чек-листы
-[ ] Поиск
+[ ] Поиск задач
 [ ] Фильтрация
-[ ] Dashboard
 [ ] История изменений
-[ ] README
-[ ] Deploy
+[ ] Dashboard
 
----
+Version 2.0
+[ ] Nginx
+[ ] HTTPS
+[ ] CI/CD
+[ ] Deploy на VPS
 
-## 🤝 Вклад в проект
 
-Если у вас есть идеи по улучшению проекта — создавайте **Issue** или отправляйте **Pull Request**.
+## 📚 Изученные технологии
+В процессе разработки были изучены:
+    Django ORM
+    Models
+    ForeignKey
+    OneToOne relationships
+    Class Based Views
+    Function Based Views
+    Authentication
+    Django Templates
+    Static and Media files
+    PostgreSQL
+    Docker
+    Environment variables
+    Gunicorn
 
----
+## 🤝 Contribution
+Если у вас есть идеи по улучшению проекта — создавайте Issue или Pull Request.
 
-## 📄 Лицензия
+👩‍💻 Автор
 
-Проект распространяется под лицензией **MIT**.
+Разработано с ❤️
 
----
-
-## 👩‍💻 Автор
-
-Разработано с ❤️ на Django.
+Backend developer
