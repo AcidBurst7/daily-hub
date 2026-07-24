@@ -37,6 +37,5 @@ services:
     depends_on:
       - web
 
-
 volumes:
   postgres_data:

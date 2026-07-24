@@ -1,95 +1,66 @@
 # 🚀 Daily Hub
 
-Daily Hub — веб-приложение для управления задачами в формате Kanban.
+> Kanban-приложение для управления личными задачами, разработанное на Django.
 
-Проект разработан на Django и предназначен для организации личных задач: создание досок, колонок и карточек задач, установка сроков выполнения и управление статусами.
-
-Проект разворачивается с использованием Docker, PostgreSQL и Gunicorn.
-
----
-
-## ✨ Возможности
-
-### Пользователи
-
-- Регистрация пользователей
-- Авторизация
-- Личный профиль
-- Загрузка фотографии профиля
-- Разграничение доступа к пользовательским данным
-
-
-### Kanban-доски
-
-- Создание нескольких досок
-- Создание колонок внутри досок
-- Создание задач
-- Редактирование задач
-- Удаление задач
-- Цветовые метки
-- Дедлайны
-- Архивирование задач
-
+![Python](https://img.shields.io/badge/Python-3.12-blue)
+![Django](https://img.shields.io/badge/Django-5.2-green)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue)
+![Docker](https://img.shields.io/badge/Docker-ready-2496ED)
+![License](https://img.shields.io/badge/license-MIT-green)
 
 ---
 
-# 🛠 Технологический стек
+## 📖 О проекте
 
-## Backend
+Daily Hub — веб-приложение для организации задач по методологии Kanban.
+
+Каждый пользователь может создавать несколько досок, добавлять колонки и задачи, устанавливать сроки выполнения и управлять личным пространством.
+
+Проект создавался как учебный, но постепенно был доведен до уровня production-ready приложения.
+
+---
+
+## Возможности
+
+- регистрация пользователей
+- авторизация
+- профиль пользователя
+- загрузка аватара
+- несколько Kanban-досок
+- CRUD досок
+- CRUD колонок
+- CRUD задач
+- дедлайны
+- цветовые метки
+
+---
+
+## Используемые технологии
+
+### Backend
 
 - Python 3.12
 - Django 5.2
-- Django ORM
-- Django Authentication
 - PostgreSQL
+- Gunicorn
 
+### Frontend
 
-## Frontend
-
-- HTML5
-- CSS3
+- HTML
+- CSS
 - JavaScript
 - Django Templates
 
-
-## Инфраструктура
+### Infrastructure
 
 - Docker
 - Docker Compose
-- Gunicorn
-- PostgreSQL
-
-
-## Дополнительно
-
-- Pillow
-- django-environ
-- Git
-
+- Nginx
+- GitHub Actions (планируется)
 
 ---
 
-# 🏗 Архитектура проекта
-
-Daily Hub
-
-Browser
-
-↓
-
-Gunicorn
-
-↓
-
-Django
-
-↓
-
-PostgreSQL
-
-
-
-В production окружении планируется:
+## Архитектура
 
 Browser
 
@@ -109,159 +80,100 @@ Django
 
 PostgreSQL
 
+---
 
+## Структура проекта
 
+applications/
+
+config/
+
+templates/
+
+static/
+
+media/
+
+nginx/
+
+scripts/
 
 ---
 
-# 📂 Структура проекта
-
-daily-hub/
-
-├── applications/
-│
-│ ├── account/
-│ │
-│ └── tasks/
-│
-├── config/
-│
-│ ├── settings.py
-│ ├── urls.py
-│ ├── wsgi.py
-│ └── asgi.py
-│
-├── static/
-│
-├── media/
-│
-├── templates/
-│
-├── Dockerfile
-├── docker-compose.yml
-├── requirements.txt
-├── manage.py
-└── README.md
-
-
-
-
----
-
-# 🚀 Запуск проекта
-
-
-## 1. Клонирование
-
+## Локальный запуск
 
 ```bash
-git clone <repository_url>
+git clone ...
 
-cd daily-hub
-```
-
-## 2. Создание файла окружения. Создать файл .env:
-
-DEBUG=True
-SECRET_KEY=your_secret_key
-DB_NAME=dailyhub
-DB_USER=postgres
-DB_PASSWORD=postgres
-DB_HOST=postgres
-DB_PORT=5432
-
-### Запуск через Docker
-
-Собрать контейнеры:
-
-```bash
 docker compose up --build
 ```
 
-После запуска приложение доступно: http://localhost:8000
+---
 
-
-### Миграции
-
-Выполнить:
+## Production
 
 ```bash
-docker exec -it dailyhub_web python manage.py migrate
+docker compose -f docker-compose.prod.yml up -d
 ```
 
-Создать администратора:
-```bash
-docker exec -it dailyhub_web python manage.py createsuperuser
+---
+
+## Переменные окружения
+
+```
+DEBUG=False
+
+SECRET_KEY=...
+
+DB_NAME=dailyhub
+
+DB_USER=postgres
+
+DB_PASSWORD=...
+
+DB_HOST=postgres
+
+DB_PORT=5432
 ```
 
-## 📸 Скриншоты
-Главная страница
+---
 
-Добавить изображение
-Kanban-доска
+## Roadmap
 
-Добавить изображение
-Профиль пользователя
+### Version 1
 
-Добавить изображение
+- [x] Авторизация
+- [x] Профиль
+- [x] Kanban
+- [x] Docker
+- [x] PostgreSQL
 
-## 🗄 База данных
+### Version 2
 
-В проекте используется PostgreSQL. База данных запускается отдельным Docker-контейнером.
+- [ ] Архивирование задач
+- [ ] Dashboard
+- [ ] Drag&Drop
+- [ ] Поиск
+- [ ] Фильтрация
 
-Django
- |
- |
-PostgreSQL container
+### Version 3
 
+- [ ] CI/CD
+- [ ] VPS Deploy
+- [ ] HTTPS
+- [ ] Monitoring
 
-## 📌 План развития
-Version 1.0
+---
 
-[x] Регистрация
-[x] Авторизация
-[x] Профиль пользователя
-[x] Kanban-доски
-[x] CRUD задач
-[x] CRUD колонок
-[x] PostgreSQL
-[x] Docker
+## Документация
 
-Version 1.1
-[ ] Чек-листы
-[ ] Поиск задач
-[ ] Фильтрация
-[ ] История изменений
-[ ] Dashboard
+- Architecture
+- Deployment
+- Docker
+- Database
 
-Version 2.0
-[ ] Nginx
-[ ] HTTPS
-[ ] CI/CD
-[ ] Deploy на VPS
+---
 
+## Автор
 
-## 📚 Изученные технологии
-В процессе разработки были изучены:
-    Django ORM
-    Models
-    ForeignKey
-    OneToOne relationships
-    Class Based Views
-    Function Based Views
-    Authentication
-    Django Templates
-    Static and Media files
-    PostgreSQL
-    Docker
-    Environment variables
-    Gunicorn
-
-## 🤝 Contribution
-Если у вас есть идеи по улучшению проекта — создавайте Issue или Pull Request.
-
-👩‍💻 Автор
-
-Разработано с ❤️
-
-Backend developer
+Алла Вараксина
