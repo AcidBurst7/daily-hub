@@ -3,6 +3,7 @@ services:
   web:
     build: .
     container_name: dailyhub_web
+    command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/app
     expose:
