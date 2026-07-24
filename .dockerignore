@@ -1,8 +1,11 @@
 venv/
 .git/
+.idea/
+.vscode/
 __pycache__/
 *.pyc
 .env
 db.sqlite3
 db.sqlite3.backup
 staticfiles/
+media/
