@@ -7,6 +7,7 @@ db.sqlite3
 db.sqlite3.backup
 data.json
 media
+staticfiles
 
 # Backup files # 
 *.bak 

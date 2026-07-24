@@ -1,10 +1,10 @@
 services:
 
   web:
+    image: dailyhub:latest
     build: .
     container_name: dailyhub_web
-    volumes:
-      - .:/app
+    command: gunicorn config.wsgi:application --bind 0.0.0.0:8000
     expose:
       - "8000"
     env_file:
