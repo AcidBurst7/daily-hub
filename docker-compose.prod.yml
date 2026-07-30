@@ -1,0 +1,42 @@
+services:
+
+  web:
+    image: dailyhub:latest
+    build: .
+    container_name: dailyhub_web
+    command: gunicorn config.wsgi:application --bind 0.0.0.0:8000
+    expose:
+      - "8000"
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+
+
+  postgres:
+    image: postgres:16
+    container_name: dailyhub_postgres
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  nginx:
+    image: nginx:latest
+    container_name: dailyhub_nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./staticfiles:/app/staticfiles
+      - ./media:/app/media
+    depends_on:
+      - web
+
+
+volumes:
+  postgres_data:

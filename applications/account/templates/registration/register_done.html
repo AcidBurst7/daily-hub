@@ -1,0 +1,16 @@
+{% extends "base_auth.html" %}
+{% load static %}
+{% block title %}DailyHub | Добро пожаловать{% endblock %}
+{% block content %}
+<div class="card card-md">
+    <div class="card-body">
+        <h2 class="h2 text-center mb-2">
+            Регистрация прошла успешно
+        </h2>
+        <p class="text-center mb-4">
+            Вы успешно зарегистрировались. <br>
+            Вы можете вернуться на страницу <a href="{% url 'account:login' %}">входа</a> и авторизоваться.
+        </p>
+    </div>
+</div>
+{% endblock %}

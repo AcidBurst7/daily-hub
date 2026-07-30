@@ -1,0 +1,23 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <link href="{% static 'css/tabler.min.css' %}" rel="stylesheet">
+</head>
+<body>
+    <div class="page page-center">
+      <div class="container container-tight py-4">
+        <div class="text-center mb-4">
+          <a href="#" aria-label="DailyHub" class="navbar-brand navbar-brand-autodark">
+            DailyHub
+          </a>
+        </div>
+        {% block content %}
+        {% endblock %}
+      </div>
+    </div>
+    <script src="{% static 'js/tabler.min.js' %}"></script>
+</body>
+</html>
+
