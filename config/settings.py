@@ -56,6 +56,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'applications.account.middleware.UserOnlineMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_htmx.middleware.HtmxMiddleware',
@@ -77,6 +78,13 @@ TEMPLATES = [
         },
     },
 ]
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://redis:6379/1",
+    }
+}
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
@@ -155,3 +163,6 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+REDIS_HOST = env("REDIS_HOST")
+REDIS_PORT = env.int("REDIS_PORT")

@@ -25,6 +25,10 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  redis:
+    image: redis:8-alpine
+    container_name: dailyhub_redis
+
   nginx:
     image: nginx:latest
     container_name: dailyhub_nginx

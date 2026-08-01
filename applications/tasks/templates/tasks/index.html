@@ -126,10 +126,9 @@
                         id="tabs-board-{{ board.id }}" 
                         role="tabpanel">
                 {% endif %}
-                    
                     <div class="d-flex flex-row">
                         {% for column in board.columns.all %}
-                        <div class="col-lg-4 col-md-6 col-xs-12 col-sm-12">
+                        <div class="col-lg-3 col-md-6 col-xs-12 col-sm-12">
                             <div class="d-flex flex-row align-items-center gx-2">
                                 <h2 class="mb-0 block-title">
                                     {{ column.name }}
