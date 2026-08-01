@@ -115,7 +115,7 @@
             </ul>
         
             <!-- Отображение колонок с задачами -->
-            <div class="tab-content p-3 h-100" style="overflow-x: auto; overflow-y: hidden;">
+            <div class="tab-content px-3 py-5 h-100" style="overflow-x: auto; overflow-y: hidden;">
             {% for board in boards.all %}
                 {% if forloop.first %}
                     <div class="tab-pane fade active show" 
@@ -179,18 +179,18 @@
                                 </a>
                             </div>
                         
-                            <div class="mb-4 mt-4 py-3 ps-0 pe-4">
+                            <div class="mb-4 mt-2 py-3 ps-0 pe-4">
                                 <div class="row row-cards">
                                     {% for task in column.tasks.all %}
-                                    <div class="col-12 mb-4">
+                                    <div class="col-12">
                                         <div class="card card-sm">
                                             <div class="card-status-top" style="background-color: color-mix(in srgb, {{task.color}} 100%, transparent) !important"></div>
                                             <div class="card-body">
                                                 <div class="row">
                                                     <div class="col">
-                                                        <input class="form-check-input m-0 align-middle table-selectable-check" 
+                                                        {% comment %} <input class="form-check-input m-0 align-middle table-selectable-check" 
                                                                type="checkbox" 
-                                                               aria-label="Отметить как прочитанное">
+                                                               aria-label="Отметить как прочитанное"> {% endcomment %}
                                                         <h3 class="card-title">
                                                             {{ task.title }}
                                                         </h3>

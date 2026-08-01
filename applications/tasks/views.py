@@ -133,7 +133,7 @@ def create_task(request, column_id: int):
         form = TaskEditForm(request.POST)
         form_checklist = ChecklistEditForm(request.POST)
         form_checklistitem = ChecklistItemEditForm(request.POST)
-
+        
         if form.is_valid():
             task = form.save(commit=False)
             task.column = column
@@ -175,9 +175,8 @@ def edit_task(request, task_id):
 
 @login_required
 def delete_task(request, task_id):
-    task = get_object_or_404(Task, id=task_id)
-
-    if request.method == "POST":
+    task = Task.objects.filter(id=task_id).first()
+    if request.method == "POST" and task:
         task.delete()
 
     return redirect("tasks:index")

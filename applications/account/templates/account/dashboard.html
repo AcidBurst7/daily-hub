@@ -3,51 +3,29 @@
 {% block content %}
 <div class="container-xl">
     <div class="row row-deck row-cards">
-        <div class="col-sm-12 col-lg-6">
-            <div class="card">
+        <div class="col-sm-12 col-lg-12">
+            <div class="card card-md">
                 <div class="card-body">
-                    <div class="row gy-3">
+                    <div class="row align-items-center">
                         <div class="col-12 col-sm d-flex flex-column">
-                            <h3 class="h2">Привет, {{ request.user.username }}</h3>
-                            <p class="text-muted">На сегодня запланировано 5 задач, вчера выполнено 2 задачи.</p>
-                            <div class="row g-5 mt-auto">
-                                <div class="col-auto">
-                                    <div class="subheader">На сегодня</div>
-                                    <div class="d-flex align-items-baseline">
-                                        <div class="h3 me-2">5 запланировано</div>
-                                    </div>
-                                    <div class="progress progress-sm">
-                                        <div class="progress-bar bg-success" style="width: 75%" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" aria-label="75% Complete">
-                                        <span class="visually-hidden">75% Complete</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="subheader">Просрочено</div>
-                                    <div class="d-flex align-items-baseline">
-                                        <div class="h3 me-2">78,4%</div>
-                                        <div class="me-auto">
-                                            <span class="text-red d-inline-flex align-items-center lh-1">
-                                                -1%
-                                                <!-- Download SVG icon from http://tabler.io/icons/icon/trending-down -->
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon ms-1 icon-2">
-                                                <path d="M3 7l6 6l4 -4l8 8"></path>
-                                                <path d="M21 10l0 7l-7 0"></path>
-                                                </svg>
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="progress progress-sm">
-                                        <div class="progress-bar bg-danger" style="width: 78%" role="progressbar" aria-valuenow="78" aria-valuemin="0" aria-valuemax="100" aria-label="78% Complete">
-                                            <span class="visually-hidden">78% Complete</span>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="text-secondary text-uppercase fw-bold mb-1">
+                                Добро пожаловать
                             </div>
+
+                            <h2 class="mb-2">
+                                Привет, {{ request.user.username }} 👋
+                            </h2>
+
+                            <p class="text-secondary mb-0">
+                                Сегодня у вас
+                                <strong>{{ user_stats.today_tasks }}</strong>
+                                задач.
+                                Вчера выполнено
+                                <strong>{{ user_stats.yesterday_tasks }}</strong>.
+                            </p>
                         </div>
-                        <div class="col-12 col-sm-auto d-flex justify-content-center">
-                        <a href="./illustrations.html">
-                          <svg xmlns="http://www.w3.org/2000/svg" height="200" fill="none" viewBox="0 0 800 600">
+                        <div class="col-12 col-sm-auto d-flex justify-content-center d-none d-lg-block">
+                          <svg xmlns="http://www.w3.org/2000/svg" height="200" style="max-height:180px;" fill="none" viewBox="0 0 800 600">
                             <style>
                               :where(.theme-dark, [data-theme="dark"]) .tblr-illustrations-good-info-a {
                                 fill: black;
@@ -137,86 +115,246 @@
                             <path d="M473.668 298.78C475.304 302.828 475.328 307.445 475.328 307.445C475.328 308.935 475.328 310.681 474.649 312.838C473.716 315.807 472.116 317.71 471.268 318.667C469.414 320.8 467.426 322.097 465.996 322.86C465.136 323.2 464.385 323.575 463.645 323.951C461.634 325.236 459.973 327.017 458.822 329.101C458.204 327.647 458.071 326.023 458.458 324.496C459.089 322.206 461.512 318.267 461.694 317.698L461.815 317.358C461.924 317.019 462.07 316.704 462.264 316.389C462.736 315.298 463.112 314.159 463.367 312.995V312.886C463.367 312.886 463.318 312.898 463.294 312.898C456.519 314.365 451.005 313.904 447.648 313.383C439.104 312.014 433.639 308.354 431.809 306.294C429.676 303.894 428.803 301.216 428.803 301.216C428.658 300.743 428.561 300.355 428.5 300.101C428.185 298.962 427.87 297.325 428.04 295.374C428.064 295.096 428.1 294.829 428.137 294.574C428.209 294.126 428.306 293.714 428.403 293.326C428.464 293.084 428.561 292.732 428.731 292.308C429.833 289.642 432.233 288.285 433.505 287.642C437.396 285.679 442.243 285.388 444.897 285.267C453.09 284.891 469.681 288.854 473.668 298.768V298.78Z" fill="#232B41" class="tblr-illustrations-good-info-c"></path>
                             <path d="M463.286 316.91C456.512 318.377 450.997 317.916 447.64 317.395C439.097 316.026 433.631 312.366 431.801 310.306C429.668 307.906 428.795 305.228 428.795 305.228C428.65 304.755 428.553 304.367 428.492 304.113C428.177 302.973 427.862 301.337 428.032 299.386C428.056 299.108 428.093 298.841 428.129 298.586C430.819 303.725 434.019 306.743 436.043 308.366C436.043 308.366 442.029 313.19 458.863 316.462C461.02 316.886 463.056 316.91 463.056 316.91C463.129 316.91 463.201 316.91 463.286 316.91Z" fill="black" opacity="0.5"></path>
                           </svg>
-                        </a>
                       </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-sm-12 col-lg-6 d-flex flex-wrap flex-row align-items-between">
-            <div class="col-sm-6 col-lg-6">
-                <div class="card card-sm">
-                    <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col-auto">
-                        <span class="bg-primary text-white avatar"><!-- Download SVG icon from http://tabler.io/icons/icon/currency-dollar -->
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
-                                <path d="M16.7 8a3 3 0 0 0 -2.7 -2h-4a3 3 0 0 0 0 6h4a3 3 0 0 1 0 6h-4a3 3 0 0 1 -2.7 -2"></path>
-                                <path d="M12 3v3m0 12v3"></path>
-                            </svg>
-                        </span>
-                        </div>
-                        <div class="col">
-                            <div class="font-weight-medium">132 Sales</div>
-                            <div class="text-secondary">12 waiting payments</div>
+
+        <!-- Доски -->
+        <div class="col-sm-6 col-lg-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="subheader">
+                            Доски
                         </div>
                     </div>
+
+                    <div class="h1 mb-0">
+                        {{ user_stats.boards }}
                     </div>
-                </div>
-            </div>
-            <div class="col-sm-6 col-lg-6">
-                <div class="card card-sm">
-                    <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col-auto">
-                        <span class="bg-green text-white avatar"><!-- Download SVG icon from http://tabler.io/icons/icon/shopping-cart -->
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
-                            <path d="M6 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
-                            <path d="M17 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
-                            <path d="M17 17h-11v-14h-2"></path>
-                            <path d="M6 5l14 1l-1 7h-13"></path></svg></span>
-                        </div>
-                        <div class="col">
-                        <div class="font-weight-medium">78 Orders</div>
-                        <div class="text-secondary">32 shipped</div>
-                        </div>
-                    </div>
+
+                    <div class="text-secondary">
+                        Всего создано
                     </div>
                 </div>
             </div>
-            <div class="col-sm-6 col-lg-6">
-                <div class="card card-sm">
-                    <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col-auto">
-                        <span class="bg-x text-white avatar"><!-- Download SVG icon from http://tabler.io/icons/icon/brand-x -->
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
-                            <path d="M4 4l11.733 16h4.267l-11.733 -16z"></path>
-                            <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"></path></svg></span>
-                        </div>
-                        <div class="col">
-                        <div class="font-weight-medium">623 Shares</div>
-                        <div class="text-secondary">16 today</div>
-                        </div>
+        </div>
+
+
+        <!-- Колонки -->
+        <div class="col-sm-6 col-lg-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="subheader">
+                        Колонки
                     </div>
+
+                    <div class="h1 mb-0">
+                        {{ user_stats.columns }}
+                    </div>
+
+                    <div class="text-secondary">
+                        Во всех досках
                     </div>
                 </div>
             </div>
-            <div class="col-sm-6 col-lg-6">
-                <div class="card card-sm">
-                    <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col-auto">
-                        <span class="bg-facebook text-white avatar"><!-- Download SVG icon from http://tabler.io/icons/icon/brand-facebook -->
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
-                            <path d="M7 10v4h3v7h4v-7h3l1 -4h-4v-2a1 1 0 0 1 1 -1h3v-4h-3a5 5 0 0 0 -5 5v2h-3"></path></svg></span>
+        </div>
+
+
+        <!-- Всего задач -->
+        <div class="col-sm-6 col-lg-3">
+            <div class="card">
+                <div class="card-body">
+
+                    <div class="subheader">
+                        Всего задач
+                    </div>
+
+                    <div class="h1 mb-0">
+                        {{ user_stats.tasks }}
+                    </div>
+
+                    <div class="text-secondary">
+                        Активных задач
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Выполнено -->
+        <div class="col-sm-6 col-lg-3">
+            <div class="card">
+                <div class="card-body">
+
+                    <div class="subheader">
+                        Выполнено
+                    </div>
+
+                    <div class="h1 mb-0 text-success">
+                        {{ user_stats.completed_tasks }}
+                    </div>
+
+                    <div class="text-secondary">
+                        Завершённых задач
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Активные задачи -->
+        <div class="col-md-6 col-xl-4">
+            <div class="card">
+                <div class="card-body">
+
+                    <div class="d-flex align-items-center">
+                        <div>
+                            <div class="subheader">
+                                В работе
+                            </div>
+
+                            <div class="h2 mb-0">
+                                {{ user_stats.active_tasks }}
+                            </div>
                         </div>
-                        <div class="col">
-                        <div class="font-weight-medium">132 Likes</div>
-                        <div class="text-secondary">21 today</div>
+
+                        <div class="ms-auto">
+                            <span class="avatar bg-blue-lt">
+                                📋
+                            </span>
                         </div>
                     </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Сегодня -->
+        <div class="col-md-6 col-xl-4">
+            <div class="card">
+                <div class="card-body">
+
+                    <div class="d-flex align-items-center">
+
+                        <div>
+                            <div class="subheader">
+                                Создано сегодня
+                            </div>
+
+                            <div class="h2 mb-0">
+                                {{ user_stats.today_tasks }}
+                            </div>
+                        </div>
+
+
+                        <div class="ms-auto">
+                            <span class="avatar bg-green-lt">
+                                📅
+                            </span>
+                        </div>
+
                     </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Вчера -->
+        <div class="col-md-6 col-xl-4">
+            <div class="card">
+                <div class="card-body">
+
+                    <div class="d-flex align-items-center">
+
+                        <div>
+                            <div class="subheader">
+                                Вчера создано
+                            </div>
+
+                            <div class="h2 mb-0">
+                                {{ user_stats.yesterday_tasks }}
+                            </div>
+                        </div>
+
+
+                        <div class="ms-auto">
+                            <span class="avatar bg-yellow-lt">
+                                📈
+                            </span>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Дедлайны -->
+        <div class="col-md-6 col-xl-4">
+            <div class="card">
+                <div class="card-body">
+
+                    <div class="d-flex align-items-center">
+
+                        <div>
+                            <div class="subheader">
+                                Открытые дедлайны
+                            </div>
+
+                            <div class="h2 mb-0 text-warning">
+                                {{ user_stats.deadlines }}
+                            </div>
+                        </div>
+
+
+                        <div class="ms-auto">
+                            <span class="avatar bg-orange-lt">
+                                ⏰
+                            </span>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Процент выполнения -->
+        <div class="col-md-6 col-xl-4">
+            <div class="card">
+                <div class="card-body">
+
+                    <div class="subheader">
+                        Прогресс
+                    </div>
+
+
+                    <div class="d-flex align-items-center">
+
+                        <div class="h2 mb-0">
+                            {{ user_stats.completion_percent }}%
+                        </div>
+
+                    </div>
+
+
+                    <div class="progress mt-3">
+                        <div 
+                            class="progress-bar bg-success"
+                            style="width: {{ user_stats.completion_percent }}%"
+                            role="progressbar">
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
