@@ -33,6 +33,15 @@ services:
     ports:
       - "6379:6379"
 
+  celery:
+    build: .
+    container_name: dailyhub_celery
+    command: celery -A config worker -l info
+    depends_on:
+      - redis
+      - postgres
+    env_file:
+      - .env
 
   nginx:
     image: nginx:latest

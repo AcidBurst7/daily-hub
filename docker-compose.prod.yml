@@ -12,7 +12,6 @@ services:
     depends_on:
       - postgres
 
-
   postgres:
     image: postgres:16
     container_name: dailyhub_postgres
@@ -29,6 +28,15 @@ services:
     image: redis:8-alpine
     container_name: dailyhub_redis
 
+  celery:
+    build: .
+    command: celery -A config worker -l info
+    depends_on:
+      - redis
+      - postgres
+    env_file:
+      - .env
+    
   nginx:
     image: nginx:latest
     container_name: dailyhub_nginx
