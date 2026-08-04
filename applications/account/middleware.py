@@ -10,9 +10,9 @@ class UserOnlineMiddleware:
 
     def __call__(self, request):
         if request.user.is_authenticated:
-            cache.set(
-                f"user:{request.user.pk}:online",
-                timezone.now().isoformat(),
-                timeout=60
-            )
+            key = f"user:{request.user.pk}:online"
+
+            value = timezone.now().timestamp()
+
+            cache.set(key, value, timeout=60)
         return self.get_response(request)
