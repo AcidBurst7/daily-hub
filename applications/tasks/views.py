@@ -1,4 +1,5 @@
 import json
+from django.utils import timezone
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
@@ -192,6 +193,33 @@ def move_task(request):
     return JsonResponse({"status": True})
 
 @login_required
+def complete_task(request, task_id):
+    if request.method == "POST":
+        task = get_object_or_404(
+            Task, id=task_id,
+            column__board__user=request.user
+        )
+
+        if task.completed_at:
+            task.completed_at = None
+            completed = False
+        else:
+            task.completed_at = timezone.now()
+            completed = True
+
+        task.save(update_fields=["completed_at"])
+
+        return JsonResponse({
+            "completed": completed
+        })
+
+    return JsonResponse(
+        {"error": "Invalid request"},
+        status=400
+    )
+
+
+@login_required
 def edit_task(request, task_id):
     task = get_object_or_404(Task, id=task_id)
 
@@ -218,5 +246,4 @@ def delete_task(request, task_id):
     task = Task.objects.filter(id=task_id).first()
     if request.method == "POST" and task:
         task.delete()
-
-    return redirect("tasks:index")
+    return redirect(f"{reverse("tasks:index")}?board={task.column.board.id}")

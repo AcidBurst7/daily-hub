@@ -186,9 +186,27 @@
                                                             {% comment %} <input class="form-check-input m-0 align-middle table-selectable-check" 
                                                                 type="checkbox" 
                                                                 aria-label="Отметить как прочитанное"> {% endcomment %}
-                                                            <h3 class="card-title">
-                                                                {{ task.title }}
-                                                            </h3>
+                                                            <div class="d-flex align-items-start gap-2">
+                                                                <input 
+                                                                    type="checkbox"
+                                                                    class="task-complete-checkbox form-check-input"
+                                                                    data-task-id="{{ task.id }}"
+                                                                    {% if task.completed_at %}checked{% endif %}
+                                                                >
+                                                                
+                                                                <div class="">
+                                                                    <h3 class="card-title mb-2 {% if task.completed_at %}text-decoration-line-through text-secondary{% endif %}">
+                                                                        {{ task.title }}
+                                                                    </h3>
+
+                                                                    {% if task.description|length > 0 %}
+                                                                        <div class="text-secondary">
+                                                                            {{ task.description }}
+                                                                        </div>
+                                                                    {% endif %}
+                                                                </div>
+                                                                
+                                                            </div>
                                                         </div>
                                                         <div class="col-auto d-flex">
                                                             <a href="{% url 'tasks:edit_task' task_id=task.id %}" class="ps-1">
@@ -224,9 +242,7 @@
                                                         </div>
                                                     </div>
                                                     
-                                                    <div class="text-secondary">
-                                                        {{ task.description }}
-                                                    </div>
+                                                    
                                                     {% if task.deadline %}
                                                     <div class="mt-4">
                                                         <div class="row">
@@ -366,5 +382,36 @@
                 }
             });
         });
+
+        document.querySelectorAll(".task-complete-checkbox").forEach(checkbox => {
+                checkbox.addEventListener("change", function(){
+                    let taskId = this.dataset.taskId;
+
+                    fetch(`/tasks/task/${taskId}/complete/`, {
+                        method: "POST",
+                        headers: {
+                            "X-CSRFToken": getCookie("csrftoken")
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+
+                        let title = this.closest(".card-body").querySelector(".card-title");
+
+                        if(data.completed) {
+                            title.classList.add(
+                                "text-decoration-line-through",
+                                "text-secondary"
+                            );
+                        } else {
+                            title.classList.remove(
+                                "text-decoration-line-through",
+                                "text-secondary"
+                            );
+                        }
+                    });
+                });
+
+            });
     </script>
 {% endblock %}
