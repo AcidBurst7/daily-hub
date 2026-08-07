@@ -1,5 +1,8 @@
+import json
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 from .models import Board, Column, Task
 from .forms import (
     BoardEditForm, 
@@ -150,6 +153,28 @@ def create_task(request, column_id: int):
             'form_checklistitem': form_checklistitem
         }
     )
+
+@login_required
+@require_POST
+def move_task(request):
+    data = json.loads(request.body)
+
+    task = get_object_or_404(
+        Task, 
+        id=data["task_id"], 
+        column__board__user=request.user
+    )
+
+    column = get_object_or_404(
+        Column,
+        id=data["column_id"],
+        board__user=request.user
+    )
+
+    task.column = column
+    task.save()
+
+    return JsonResponse({"status": True})
 
 @login_required
 def edit_task(request, task_id):

@@ -52,6 +52,7 @@ class Task(models.Model):
     class Meta:
         ordering = ["order"]
 
+
 class CheckList(models.Model):
     task = models.ForeignKey(
         Task, 

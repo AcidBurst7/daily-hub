@@ -179,9 +179,9 @@
                             </div>
                         
                             <div class="mb-4 mt-2 py-3 ps-0 pe-4">
-                                <div class="row row-cards">
+                                <div class="row row-cards task-list"  data-column-id="{{ column.id }}">
                                     {% for task in column.tasks.all %}
-                                    <div class="col-12">
+                                    <div class="col-12 task-card" data-task-id="{{ task.id }}">
                                         <div class="card card-sm">
                                             <div class="card-status-top" style="background-color: color-mix(in srgb, {{task.color}} 100%, transparent) !important"></div>
                                             <div class="card-body">
@@ -231,31 +231,31 @@
                                                 <div class="text-secondary">
                                                     {{ task.description }}
                                                 </div>
+                                                {% if task.deadline %}
                                                 <div class="mt-4">
                                                     <div class="row">
                                                         <div class="col-auto">
                                                             <a href="#" class="link-warning">
-                                                            <!-- Download SVG icon from http://tabler.io/icons/icon/calendar -->
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
-                                                                <path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z"></path>
-                                                                <path d="M16 3v4"></path>
-                                                                <path d="M8 3v4"></path>
-                                                                <path d="M4 11h16"></path>
-                                                                <path d="M11 15h1"></path>
-                                                                <path d="M12 15v3"></path>
-                                                            </svg>
-                                                            {{ task.deadline }}
+                                                                <!-- Download SVG icon from http://tabler.io/icons/icon/calendar -->
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
+                                                                    <path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z"></path>
+                                                                    <path d="M16 3v4"></path>
+                                                                    <path d="M8 3v4"></path>
+                                                                    <path d="M4 11h16"></path>
+                                                                    <path d="M11 15h1"></path>
+                                                                    <path d="M12 15v3"></path>
+                                                                </svg>
+                                                                {{ task.deadline }}
                                                             </a>
                                                         </div>
                                                     </div>
                                                 </div>
+                                                {% endif %}
                                             </div>
                                         </div>
                                     </div>
                                     {% endfor %}
                                 </div>
-
-                                
                             </div>
                         </div>
                         {% endfor %}
@@ -316,4 +316,31 @@
             </div>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
+    <script>
+        document.querySelectorAll(".task-list").forEach(list => {
+            new Sortable(list, {
+                group: "tasks",
+                animation: 150,
+                onEnd: function(evt) {
+                    const taskId = evt.item.dataset.taskId;
+                    const newColumn = evt.to.dataset.columnId;
+
+                    fetch("{% url 'tasks:move_task' %}", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRFToken": getCookie("csrftoken")
+                        },
+                        body: JSON.stringify({
+                            task_id: taskId,
+                            column_id: newColumn
+                        })
+                    });
+                }
+            });
+
+        });
+    </script>
 {% endblock %}

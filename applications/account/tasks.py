@@ -1,7 +1,8 @@
+import time
+from django.utils import timezone
 from celery import shared_task
 
 
 @shared_task
-def test_task():
-    print("CELERY WORKS!")
-    return "OK"
+def update_last_seen():
+    print(f"Beat works111! {timezone.now()}")

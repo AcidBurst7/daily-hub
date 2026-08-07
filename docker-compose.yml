@@ -13,7 +13,6 @@ services:
     depends_on:
       - postgres
 
-
   postgres:
     image: postgres:16
     container_name: dailyhub_postgres
@@ -42,6 +41,15 @@ services:
       - postgres
     env_file:
       - .env
+
+  celery-beat:
+    build: .
+    container_name: dailyhub_celery_beat
+    command: celery -A config beat -l info
+    env_file:
+      - .env
+    depends_on:
+      - redis
 
   nginx:
     image: nginx:latest

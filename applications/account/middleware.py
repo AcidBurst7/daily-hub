@@ -1,6 +1,4 @@
-print("!!! middleware.py imported !!!")
-
-from django.core.cache import cache
+from config.redis import redis_client
 from django.utils import timezone
 
 
@@ -12,7 +10,10 @@ class UserOnlineMiddleware:
         if request.user.is_authenticated:
             key = f"user:{request.user.pk}:online"
 
-            value = timezone.now().timestamp()
-
-            cache.set(key, value, timeout=60)
+            if redis_client.ttl(key) < 30:
+                redis_client.set(
+                    key, 
+                    timezone.now().timestamp(),
+                    ex=60
+                )
         return self.get_response(request)

@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Task, CheckList, CheckListItem
+from .models import Task, Column, CheckList, CheckListItem
 
 
 class BoardEditForm(forms.Form):
@@ -23,26 +23,24 @@ class TaskEditForm(forms.ModelForm):
         fields = [
             "title",
             "description",
+            "column",
             "color",
             "deadline",
             "is_archived",
         ]
         labels = {
             "title": "Название задачи",
+            "column": "Колонка",
             "description": "Описание",
             "color": "Цвет",
             "deadline": "Дедлайн",
             "is_archived": "Архивирована",
         }
         widgets = {
-            "title": forms.TextInput(
-                attrs={"class": "form-control"}
-            ),
+            "title": forms.TextInput( attrs={"class": "form-control"}),
+            "column": forms.Select(attrs={"class": "form-control"}),
             "description": forms.Textarea(
-                attrs={
-                    "class": "form-control",
-                    "rows": 4,
-                }
+                attrs={"class": "form-control","rows": 4}
             ),
             "color": forms.TextInput(
                 attrs={
@@ -63,6 +61,8 @@ class TaskEditForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        board = kwargs.pop("board", None)
+
         super().__init__(*args, **kwargs)
 
         # Чтобы datetime-local корректно отображал существующее значение
@@ -70,6 +70,9 @@ class TaskEditForm(forms.ModelForm):
             self.initial["deadline"] = self.instance.deadline.strftime(
                 "%Y-%m-%dT%H:%M"
             )
+
+        if board:
+            self.fields["column"].queryset = Column.objects.filter(board=board).all()
 
 
 class ChecklistEditForm(forms.ModelForm):

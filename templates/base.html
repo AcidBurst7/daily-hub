@@ -11,6 +11,26 @@
 
 </head>
 <body hx-headers='{"x-csrftoken": "{{ csrf_token }}"}'>
+        <script>
+        function getCookie(name) {
+            let cookieValue = null;
+
+            if (document.cookie && document.cookie !== "") {
+                const cookies = document.cookie.split(";");
+
+                for (let cookie of cookies) {
+                    cookie = cookie.trim();
+
+                    if (cookie.startsWith(name + "=")) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+
+            return cookieValue;
+        }
+    </script>
     {% if request.user.is_authenticated %}
     <div class="page">
         <header class="navbar navbar-expand-sm navbar-light d-print-none">
@@ -24,13 +44,17 @@
                             data-bs-toggle="dropdown" aria-label="Open user menu">
                             {% if request.user.profile.photo %}
                                 <span class="avatar avatar-sm" 
-                                        style="background-image: url({{ request.user.profile.photo.url }})"></span>
+                                        style="background-image: url({{ request.user.profile.photo.url }})">
                             {% else %}
-                                <span class="avatar">AB</span>
+                                <span class="avatar">{{ request.user.username|default:request.user.first_name|slice:"0:2" }}
                             {% endif %}
-                            
+
+                                {% if is_online %}
+                                    <span class="badge bg-success" title="Онлайн"></span>
+                                {% endif %}
+                            </span>
                             <div class="d-none d-xl-block ps-2">
-                                <div>{{ request.user.first_name|default:request.user.username }}</div>
+                                <div>{{ request.user.username|default:request.user.first_name }}</div>
                             </div>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
@@ -101,5 +125,6 @@
 			
     {% comment %} <script src="{% static 'lib/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script> {% endcomment %}
     <script src="{% static 'js/tabler.min.js' %}"></script>
+
 </body>
 </html>

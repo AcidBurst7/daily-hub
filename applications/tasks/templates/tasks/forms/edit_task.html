@@ -20,13 +20,31 @@
                             {{ form.title }}
                             {{ form.title.errors }}
                         </div>
+                    </div>
 
-                        <div class="mb-3 col-3">
+                    <div class="row">
+                        <div class="mb-3 col">
+                            <label class="form-label">{{ form.column.label }}</label>
+                            {{ form.column }}
+                            {{ form.column.errors }}
+                        </div>
+
+                        <div class="mb-3 col">
                             <label class="form-label">{{ form.deadline.label }}</label>
                             {{ form.deadline }}
                             {{ form.deadline.errors }}
                         </div>
+                    </div>
 
+                    <div class="row">
+                        <div class="mb-3">
+                            <label class="form-label">{{ form.description.label }}</label>
+                            {{ form.description }}
+                            {{ form.description.errors }}
+                        </div>
+                    </div>
+
+                    <div class="row">
                         <div class="mb-3 col">
                             <label class="form-label">Цвет карточки</label>
                             <div class="d-flex flex-wrap gap-2">
@@ -83,13 +101,7 @@
                         </div>
                     </div>
                     
-
-                    <div class="mb-3">
-                        <label class="form-label">{{ form.description.label }}</label>
-                        {{ form.description }}
-                        {{ form.description.errors }}
-                    </div>
-
+                    
                     {% comment %} <div class="form-check mb-4">
                         {{ form.is_archived }}
                         <label class="form-check-label">

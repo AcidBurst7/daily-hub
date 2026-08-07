@@ -31,11 +31,22 @@ services:
   celery:
     build: .
     command: celery -A config worker -l info
+    container_name: dailyhub_celery
     depends_on:
       - redis
       - postgres
     env_file:
       - .env
+
+  celery-beat:
+    image: dailyhub:latest
+    container_name: dailyhub_celery_beat
+    command: celery -A config beat -l info
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - postgres
     
   nginx:
     image: nginx:latest

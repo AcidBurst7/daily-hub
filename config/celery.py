@@ -8,7 +8,6 @@ os.environ.setdefault(
     "config.settings"
 )
 
-
 app = Celery("dailyhub")
 
 app.config_from_object(
