@@ -8,18 +8,6 @@ services:
     expose:
       - "8000"
 
-    healthcheck:
-      test:
-        - CMD
-        - python
-        - -c
-        - |
-          import urllib.request
-          urllib.request.urlopen("http://localhost:8000")
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
   postgres:
     image: postgres:16
     container_name: dailyhub_postgres
@@ -67,7 +55,6 @@ services:
       - ./media:/app/media
     depends_on:
       web:
-        condition: service_healthy
 
 
 volumes:
