@@ -150,16 +150,16 @@ DB_PORT=5432
 
 ### Version 2
 
-- [ ] Архивирование задач
+- [x] Архивирование задач
 - [ ] Dashboard
-- [ ] Drag&Drop
+- [x] Drag&Drop
 - [ ] Поиск
 - [ ] Фильтрация
+- [x] CI/CD
+- [x] VPS Deploy
 
 ### Version 3
 
-- [ ] CI/CD
-- [ ] VPS Deploy
 - [ ] HTTPS
 - [ ] Monitoring
 
