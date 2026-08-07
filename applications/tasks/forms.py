@@ -38,7 +38,6 @@ class TaskEditForm(forms.ModelForm):
         }
         widgets = {
             "title": forms.TextInput( attrs={"class": "form-control"}),
-            "column": forms.Select(attrs={"class": "form-control"}),
             "description": forms.Textarea(
                 attrs={"class": "form-control","rows": 4}
             ),
@@ -65,15 +64,23 @@ class TaskEditForm(forms.ModelForm):
 
         super().__init__(*args, **kwargs)
 
-        # Чтобы datetime-local корректно отображал существующее значение
+        self.fields["column"].widget.attrs.update({
+            "class": "form-control"
+        })
+
         if self.instance and self.instance.deadline:
             self.initial["deadline"] = self.instance.deadline.strftime(
                 "%Y-%m-%dT%H:%M"
             )
 
         if board:
-            self.fields["column"].queryset = Column.objects.filter(board=board).all()
+            self.fields["column"].queryset = Column.objects.\
+                filter(board=board, board__user=board.user).all()
+            # self.fields["column"].initial = board
 
+        if not self.instance.pk:
+            self.fields.pop("column")
+            self.fields.pop("is_archived")
 
 class ChecklistEditForm(forms.ModelForm):
     class Meta:

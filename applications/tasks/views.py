@@ -1,5 +1,6 @@
 import json
 from django.shortcuts import get_object_or_404, render, redirect
+from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
@@ -24,6 +25,7 @@ def get_user_boards(user):
 def index(request):
     boards = Board.objects.filter(user=request.user)
     columns = get_user_boards(request.user)
+    active_board = request.GET.get("board")
     return render(
         request,
         'tasks/index.html',
@@ -31,6 +33,7 @@ def index(request):
             'section': 'tasks', 
             'boards': boards,
             'columns': columns,
+            'active_board': int(active_board) if active_board else None,
             'data': get_user_boards(request.user),
             'create_board_form': BoardEditForm(),
             'create_column_form': ColumnEditForm(),
@@ -57,11 +60,15 @@ def create_board(request):
         create_board_form = BoardEditForm(request.POST)
         if create_board_form.is_valid():
             cleaned_data = create_board_form.cleaned_data
-            Board(
+            new_board=Board(
                 name=cleaned_data["name"], 
                 user=request.user
-            ).save()
-            return redirect("tasks:index")
+            )
+            new_board.save()
+
+            return redirect(
+                f"{reverse("tasks:index")}?board={new_board.id}"
+            )
     return render(request, 'tasks/index.html', {
             'create_board_form': BoardEditForm(),
             'data': get_user_boards(request.user),
@@ -76,10 +83,12 @@ def edit_board(request, board_id: int):
         create_board_form = BoardEditForm(request.POST)
         if create_board_form.is_valid():
             cleaned_data = create_board_form.cleaned_data
+
             board = Board.objects.filter(id=board_id).first()
             board.name = cleaned_data["name"]
             board.save()
-            return redirect("tasks:index")
+            
+            return redirect(f"{reverse("tasks:index")}?board={board.id}")
     return render(request, 'tasks/forms/edit_board.html', {
             'edit_board_form': edit_board_form
         }
@@ -103,7 +112,7 @@ def create_column(request, board_id: int):
                 board=current_board
             )
             new_colum.save()
-            return redirect("tasks:index")
+            return redirect(f"{reverse("tasks:index")}?board={new_colum.board.id}")
 
 @login_required
 def edit_column(request, column_id: int):
@@ -113,10 +122,13 @@ def edit_column(request, column_id: int):
         edit_column_form = ColumnEditForm(request.POST)
         if edit_column_form.is_valid():
             cleaned_data = edit_column_form.cleaned_data
+
             column = Column.objects.filter(id=column_id).first()
             column.name = cleaned_data["name"]
             column.save()
-            return redirect("tasks:index")
+
+            return redirect(f"{reverse("tasks:index")}?board={column.board.id}")
+        
     return render(request, 'tasks/forms/edit_column.html', {
             'edit_column_form': edit_column_form
         }
@@ -125,15 +137,16 @@ def edit_column(request, column_id: int):
 @login_required
 def delete_column(request, column_id: int):
     if request.method == 'POST':
-        Column.objects.filter(id=column_id).delete()
-    return redirect("tasks:index")
+        column = Column.objects.get(id=column_id)
+        column.delete()
+        return redirect(f"{reverse("tasks:index")}?board={column.board.id}")
 
 @login_required
 def create_task(request, column_id: int):
     column = get_object_or_404(Column, id=column_id)
     
     if request.method == "POST":
-        form = TaskEditForm(request.POST)
+        form = TaskEditForm(request.POST, board=column.board)
         form_checklist = ChecklistEditForm(request.POST)
         form_checklistitem = ChecklistItemEditForm(request.POST)
         
@@ -142,13 +155,15 @@ def create_task(request, column_id: int):
             task.column = column
             task.order = column.tasks.count()  # добавляем в конец списка
             task.save()
-            return redirect("tasks:index")
+            
+            return redirect(f"{reverse("tasks:index")}?board={column.board.id}")
     
-    form = TaskEditForm()
+    form = TaskEditForm(board=column.board)
     form_checklist = ChecklistEditForm()
     form_checklistitem = ChecklistItemEditForm()
     return render(request, 'tasks/forms/edit_task.html', {
             'form': form,
+            "board_id": column.board.id,
             'form_checklist': form_checklist,
             'form_checklistitem': form_checklistitem
         }
@@ -181,20 +196,20 @@ def edit_task(request, task_id):
     task = get_object_or_404(Task, id=task_id)
 
     if request.method == "POST":
-        form = TaskEditForm(request.POST, instance=task)
+        form = TaskEditForm(request.POST, instance=task, board=task.column.board)
         if form.is_valid():
             form.save()
-            return redirect("tasks:index")
+            return redirect(f"{reverse("tasks:index")}?board={task.column.board.id}")
     else:
-        form = TaskEditForm(instance=task)
+        form = TaskEditForm(instance=task, board=task.column.board)
 
     return render(
         request,
         "tasks/forms/edit_task.html",
         {
             "form": form,
+            "board_id": task.column.board.id,
             "task": task,
-            "is_edit": True,
         },
     )
 

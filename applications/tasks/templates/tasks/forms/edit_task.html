@@ -1,7 +1,13 @@
 {% extends 'base.html' %}
 {% load custom_tags %}
 {% load static %}
-{%block title %}Создание задачи{% endblock %}
+{%block title %}
+    {% if form.instance.pk %}
+        Редактирование задачи
+    {% else %}
+        Создание задачи
+    {% endif %}
+{% endblock %}
 {% block content %}
 <div class="page-body">
     <div class="container-xl">
@@ -10,7 +16,13 @@
                 {% csrf_token %}
 
                 <div class="card-header">
-                    <h3 class="card-title">Создание задачи</h3>
+                    <h3 class="card-title">
+                        {% if form.instance.pk %}
+                            Редактирование задачи
+                        {% else %}
+                            Создание задачи
+                        {% endif %}
+                    </h3>
                 </div>
 
                 <div class="card-body">
@@ -23,13 +35,13 @@
                     </div>
 
                     <div class="row">
-                        <div class="mb-3 col">
+                        <div class="{% if form.instance.pk %}mb-3{% endif %} col ">
                             <label class="form-label">{{ form.column.label }}</label>
                             {{ form.column }}
                             {{ form.column.errors }}
                         </div>
-
-                        <div class="mb-3 col">
+                        
+                        <div class="mb-3 col{% if not form.instance.pk %}-12{% endif %}">
                             <label class="form-label">{{ form.deadline.label }}</label>
                             {{ form.deadline }}
                             {{ form.deadline.errors }}
@@ -112,7 +124,7 @@
 
                 <div class="card-footer text-end">
                     <div class="d-flex justify-content-end align-items-center">
-                        <a href="{% url 'tasks:index' %}" class="btn btn-link link-secondary btn-3"> Выход </a>
+                        <a href="{% url 'tasks:index' %}?board={{ board_id }}" class="btn btn-link link-secondary btn-3"> Выход </a>
                         <button type="submit" class="btn btn-primary ms-4">
                             Сохранить
                         </button>

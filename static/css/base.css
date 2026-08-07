@@ -1,22 +1,42 @@
-.block-title {
-  position: relative;
-  cursor: pointer;
+.board-tab-wrapper {
+    position: relative;
 }
 
-.block-title .block-title__icon  {
-  opacity: 0 !important; /* Иконка скрыта по умолчанию */
-  visibility: hidden !important; /* Полностью убирает элемент из потока */
-  transition: opacity 0.3s ease, visibility 0.3s ease !important; /* Плавное появление */
 
+.board-actions {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition: opacity .2s ease;
 }
 
-.block-title:hover .block-title__icon {
-  opacity: 1 !important; /* Иконка становится видимой */
-  visibility: visible !important;
+
+.board-tab-wrapper:hover .board-actions {
+    opacity: 1;
+    visibility: visible;
 }
 
-.tasks-tab-board:hover + .tasks-actions-board {
-  visibility: visible !important;
+
+.board-action-icon,
+.delete-board-btn {
+    display: flex;
+    align-items: center;
+
+    border: none;
+    background: none;
+    padding: 0;
+
+    cursor: pointer;
+}
+
+
+.board-action-icon:hover svg,
+.delete-board-btn:hover svg {
+    stroke: #206bc4;
 }
 
 .task-list {
@@ -32,4 +52,40 @@
     border: 2px dashed #ddd;
     border-radius: 8px;
     pointer-events: none;
+}
+
+.column-header {
+    position: relative;
+    cursor: pointer;
+}
+
+.column-actions {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .2s ease;
+}
+
+.column-header:hover .column-actions {
+    opacity: 1;
+    visibility: visible;
+}
+
+.delete-column-btn {
+    border: none;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    color: inherit;
+    cursor: pointer;
+}
+
+.delete-column-btn:hover,
+.delete-column-btn:focus {
+    background: transparent;
+    outline: none;
 }
