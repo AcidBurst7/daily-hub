@@ -18,3 +18,18 @@
 .tasks-tab-board:hover + .tasks-actions-board {
   visibility: visible !important;
 }
+
+.task-list {
+    min-height: 150px;
+}
+
+.empty-column {
+    min-height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #999;
+    border: 2px dashed #ddd;
+    border-radius: 8px;
+    pointer-events: none;
+}

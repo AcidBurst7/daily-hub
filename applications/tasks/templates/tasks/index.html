@@ -254,6 +254,10 @@
                                             </div>
                                         </div>
                                     </div>
+                                    {% empty %}
+                                        <div class="text-secondary empty-column">
+                                            Перетащите сюда задачу
+                                        </div>
                                     {% endfor %}
                                 </div>
                             </div>
@@ -319,13 +323,30 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
     <script>
+        function updateEmptyColumn(list) {
+            const hasTasks = list.querySelector(".task-card");
+
+            let placeholder = list.querySelector(".empty-column");
+
+            if (!hasTasks && !placeholder) {
+                placeholder = document.createElement("div");
+                placeholder.className = "empty-column";
+                placeholder.textContent = "Перетащите задачу сюда";
+                list.appendChild(placeholder);
+            }
+
+            if (hasTasks && placeholder) {
+                placeholder.remove();
+            }
+        }
+
         document.querySelectorAll(".task-list").forEach(list => {
             new Sortable(list, {
                 group: "tasks",
                 animation: 150,
                 onEnd: function(evt) {
-                    const taskId = evt.item.dataset.taskId;
-                    const newColumn = evt.to.dataset.columnId;
+                    updateEmptyColumn(evt.from);
+                    updateEmptyColumn(evt.to);
 
                     fetch("{% url 'tasks:move_task' %}", {
                         method: "POST",
@@ -334,13 +355,12 @@
                             "X-CSRFToken": getCookie("csrftoken")
                         },
                         body: JSON.stringify({
-                            task_id: taskId,
-                            column_id: newColumn
+                            task_id: evt.item.dataset.taskId,
+                            column_id: evt.to.dataset.columnId
                         })
                     });
                 }
             });
-
         });
     </script>
 {% endblock %}
