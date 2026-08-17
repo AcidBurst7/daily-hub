@@ -62,22 +62,21 @@
                             {% if board.id == active_board or not active_board and forloop.first  %}
                                 <a href="#tabs-board-{{ board.id }}"
                                     class="nav-link active tasks-tab-board"
-                                    data-bs-toggle="tab"
-                                    role="tab" 
+                                    data-bs-toggle="tab" role="tab"
                                     aria-selected="true">
                             {% else %}
                                 <a  href="#tabs-board-{{ board.id }}"
                                     class="nav-link tasks-tab-board"
                                     data-bs-toggle="tab"
-                                    role="tab" 
+                                    role="tab"
                                     aria-selected="false">
                             {% endif %}
                                 {{ board.name }}
                             </a>
 
                             <div class="d-flex flex-row board-actions">
-                                <a href="{% url 'tasks:edit_board' board_id=board.id %}"
-                                    class="ps-1 ">
+                                {% comment %} <a href="{% url 'tasks:edit_board' board_id=board.id %}"
+                                    class="ps-1">
                                     <svg class="icon icon-tabler icons-tabler-outline icon-tabler-pencil block-title__icon"
                                         xmlns="http://www.w3.org/2000/svg" color="grey" 
                                         width="24" height="24" viewBox="0 0 24 24" fill="none" 
@@ -87,8 +86,26 @@
                                         <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
                                         <path d="M13.5 6.5l4 4" />
                                     </svg>
-                                </a>
-                                <a href="#" class="ps-1">
+                                </a> {% endcomment %}
+                                
+                                <button class="ps-1" type="button" 
+                                        hx-get="{% url 'tasks:get_edit_board_form' board_id=board.id %}" 
+                                        hx-target="#modal-edit-board-container">
+                                    <svg class="icon icon-tabler icons-tabler-outline icon-tabler-pencil block-title__icon"
+                                        xmlns="http://www.w3.org/2000/svg" color="grey" 
+                                        width="24" height="24" viewBox="0 0 24 24" fill="none" 
+                                        stroke="currentColor" stroke-width="2" 
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+                                        <path d="M13.5 6.5l4 4" />
+                                    </svg>
+                                </button>
+                                <div id="modal-edit-board-container"></div>
+
+                                <a href="#" title="Удалить доску"
+                                    onclick="return confirm('Вы уверены, что хотите удалить доску?');" 
+                                    class="ps-1">
                                     <form action="{% url 'tasks:delete_board' board_id=board.id %}" 
                                         method="post"> 
                                         {% csrf_token %}
@@ -152,7 +169,6 @@
                                         </svg>
                                     </a>
 
-
                                     <form action="{% url 'tasks:delete_column' column_id=column.id %}"
                                         method="post"
                                         class="d-inline">
@@ -160,6 +176,7 @@
                                         
                                         <button type="submit"
                                                 class="delete-column-btn"
+                                                onclick="return confirm('Вы уверены, что хотите удалить колонку?');"
                                                 title="Удалить колонку">
                                             <svg xmlns="http://www.w3.org/2000/svg" color="grey" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
@@ -183,9 +200,6 @@
                                                 <div class="card-body">
                                                     <div class="row">
                                                         <div class="col">
-                                                            {% comment %} <input class="form-check-input m-0 align-middle table-selectable-check" 
-                                                                type="checkbox" 
-                                                                aria-label="Отметить как прочитанное"> {% endcomment %}
                                                             <div class="d-flex align-items-start gap-3">
                                                                 <input 
                                                                     type="checkbox"
@@ -220,7 +234,9 @@
                                                                     <path d="M13.5 6.5l4 4" />
                                                                 </svg>
                                                             </a>
-                                                            <a href="#" class="ps-1">
+                                                            <a href="#" class="ps-1" 
+                                                                title="Удалить задачу"  title="Удалить доску" 
+                                                                onclick="return confirm('Вы уверены, что хотите удалить задачу?');">
                                                                 <form action="{% url 'tasks:delete_task' task_id=task.id %}" 
                                                                     method="post"> 
                                                                     {% csrf_token %}

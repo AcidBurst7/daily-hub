@@ -3,7 +3,7 @@ from django.utils import timezone
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_POST
 from .models import Board, Column, Task
 from .forms import (
@@ -94,6 +94,27 @@ def edit_board(request, board_id: int):
             'edit_board_form': edit_board_form
         }
     )
+
+@login_required
+def get_edit_board_form(request, board_id: int):
+    board = Board.objects.filter(id=board_id).first()
+    edit_board_form = BoardEditForm(initial={"name": board.name})
+    if request.method == 'POST':
+        create_board_form = BoardEditForm(request.POST)
+        if create_board_form.is_valid():
+            cleaned_data = create_board_form.cleaned_data
+            board = Board.objects.filter(id=board_id).first()
+            board.name = cleaned_data["name"]
+            board.save()
+            return redirect(f"{reverse("tasks:index")}?board={board.id}")
+    return render(request, 'tasks/partials/edit_board.html', {
+            'edit_board_form': edit_board_form
+        }
+    )
+
+@login_required
+def clear_modal(request):
+    return HttpResponse("")
 
 @login_required
 def delete_board(request, board_id: int):

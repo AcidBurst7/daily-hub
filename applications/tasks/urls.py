@@ -8,6 +8,7 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("create_board/", views.create_board, name="create_board"),
     path("edit_board/<int:board_id>", views.edit_board, name="edit_board"),
+    path("get_edit_board_form/<int:board_id>", views.get_edit_board_form, name="get_edit_board_form"),
     path("delete_board/<int:board_id>", views.delete_board, name="delete_board"),
 
     path("create_column/<int:board_id>/", views.create_column, name="create_column"),
@@ -19,4 +20,6 @@ urlpatterns = [
     path("delete_task/<int:task_id>/", views.delete_task, name="delete_task"),
     path("move_task/", views.move_task, name="move_task"),
     path("task/<int:task_id>/complete/", views.complete_task, name="complete_task"),
+
+    path("clear_modal/", views.clear_modal, name="clear_modal"),
 ]

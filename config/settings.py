@@ -31,7 +31,7 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG", default=True)
 
-ALLOWED_HOSTS = env.list("ALLOWED_HOSTS",default=["127.0.0.1", "localhost"])
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["127.0.0.1", "localhost"])
 
 # Application definition
 INSTALLED_APPS = [
@@ -165,16 +165,6 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 REDIS_HOST = env("REDIS_HOST")
 REDIS_PORT = env.int("REDIS_PORT")
 REDIS_DB = env.int("REDIS_DB", default=1)
-
-
-# CELERY_BROKER_URL = "redis://redis:6379/0"
-# CELERY_RESULT_BACKEND = "redis://redis:6379/0"
-# CELERY_BEAT_SCHEDULE = {
-#     "update-last-seen": {
-#         "task": "applications.account.tasks.update_last_seen",
-#         "schedule": 60.0
-#     }
-# }
 
 CELERY_BROKER_URL = env(
     "CELERY_BROKER_URL",
