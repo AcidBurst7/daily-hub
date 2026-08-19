@@ -78,37 +78,33 @@ def create_board(request):
 
 @login_required
 def edit_board(request, board_id: int):
-    board = Board.objects.filter(id=board_id).first()
-    edit_board_form = BoardEditForm(initial={"name": board.name})
-    if request.method == 'POST':
-        create_board_form = BoardEditForm(request.POST)
-        if create_board_form.is_valid():
-            cleaned_data = create_board_form.cleaned_data
-
-            board = Board.objects.filter(id=board_id).first()
-            board.name = cleaned_data["name"]
-            board.save()
-            
-            return redirect(f"{reverse("tasks:index")}?board={board.id}")
-    return render(request, 'tasks/forms/edit_board.html', {
-            'edit_board_form': edit_board_form
-        }
+    board = get_object_or_404(
+        Board,
+        id=board_id,
+        user=request.user
     )
-
-@login_required
-def get_edit_board_form(request, board_id: int):
-    board = Board.objects.filter(id=board_id).first()
-    edit_board_form = BoardEditForm(initial={"name": board.name})
+    
     if request.method == 'POST':
-        create_board_form = BoardEditForm(request.POST)
-        if create_board_form.is_valid():
-            cleaned_data = create_board_form.cleaned_data
-            board = Board.objects.filter(id=board_id).first()
-            board.name = cleaned_data["name"]
-            board.save()
-            return redirect(f"{reverse("tasks:index")}?board={board.id}")
-    return render(request, 'tasks/partials/edit_board.html', {
-            'edit_board_form': edit_board_form
+        form = BoardEditForm(request.POST)
+
+        if form.is_valid():
+            board.name = form.cleaned_data["name"]
+            board.save(update_fields=["name"])
+
+            response = HttpResponse()
+            response["HX-Redirect"] = f"{reverse("tasks:index")}?board={board.id}"
+            return response
+    else:
+        form = BoardEditForm(
+            initial={"name": board.name}
+        )
+
+    return render(
+        request, 
+        'tasks/partials/forms/edit_board.html', 
+        {
+            'edit_board_form': form,
+            'board': board
         }
     )
 
@@ -138,21 +134,32 @@ def create_column(request, board_id: int):
 
 @login_required
 def edit_column(request, column_id: int):
-    column = Column.objects.filter(id=column_id).first()
-    edit_column_form = ColumnEditForm(initial={"name": column.name})
+    column = get_object_or_404(
+        Column,
+        id=column_id,
+        board__user=request.user
+    )
+    
     if request.method == 'POST':
-        edit_column_form = ColumnEditForm(request.POST)
-        if edit_column_form.is_valid():
-            cleaned_data = edit_column_form.cleaned_data
+        form = ColumnEditForm(request.POST)
+        if form.is_valid():
+            column.name = form.cleaned_data["name"]
+            column.save(update_fields=["name"])
 
-            column = Column.objects.filter(id=column_id).first()
-            column.name = cleaned_data["name"]
-            column.save()
-
-            return redirect(f"{reverse("tasks:index")}?board={column.board.id}")
+            response = HttpResponse()
+            response["HX-Redirect"] = f"{reverse("tasks:index")}?board={column.board.id}"
+            return response
+    else:
+        form = ColumnEditForm(
+            initial={"name": column.name}
+        )
         
-    return render(request, 'tasks/forms/edit_column.html', {
-            'edit_column_form': edit_column_form
+    return render(
+        request, 
+        'tasks/partials/forms/edit_column.html', 
+        {
+            'edit_column_form': form,
+            'column': column,
         }
     )
         
@@ -165,7 +172,11 @@ def delete_column(request, column_id: int):
 
 @login_required
 def create_task(request, column_id: int):
-    column = get_object_or_404(Column, id=column_id)
+    column = get_object_or_404(
+        Column, 
+        id=column_id,
+        board__user=request.user
+    )
     
     if request.method == "POST":
         form = TaskEditForm(request.POST, board=column.board)
@@ -178,17 +189,56 @@ def create_task(request, column_id: int):
             task.order = column.tasks.count()  # добавляем в конец списка
             task.save()
             
-            return redirect(f"{reverse("tasks:index")}?board={column.board.id}")
+            response = HttpResponse()
+            response["HX-Redirect"] = f"{reverse("tasks:index")}?board={task.column.board.id}"
+            return response
     
     form = TaskEditForm(board=column.board)
     form_checklist = ChecklistEditForm()
     form_checklistitem = ChecklistItemEditForm()
-    return render(request, 'tasks/forms/edit_task.html', {
+    return render(request, 'tasks/partials/forms/edit_task.html', {
             'form': form,
-            "board_id": column.board.id,
+            'board_id': column.board.id,
             'form_checklist': form_checklist,
-            'form_checklistitem': form_checklistitem
+            'form_checklistitem': form_checklistitem,
+            'column': column,
+            'is_new': True,
         }
+    )
+
+@login_required
+def edit_task(request, task_id: int):
+    task = get_object_or_404(
+        Task, 
+        id=task_id
+    )
+
+    if request.method == "POST":
+        form = TaskEditForm(
+            request.POST, 
+            instance=task, 
+            board=task.column.board
+        )
+        if form.is_valid():
+            form.save()
+            response = HttpResponse()
+            response["HX-Redirect"] = f"{reverse("tasks:index")}?board={task.column.board.id}"
+            return response
+    else:
+        form = TaskEditForm(
+            instance=task, 
+            board=task.column.board
+        )
+
+    return render(
+        request,
+        "tasks/partials/forms/edit_task.html",
+        {
+            "form": form,
+            "board_id": task.column.board.id,
+            "task": task,
+            'is_new': False,
+        },
     )
 
 @login_required
@@ -237,29 +287,6 @@ def complete_task(request, task_id):
     return JsonResponse(
         {"error": "Invalid request"},
         status=400
-    )
-
-
-@login_required
-def edit_task(request, task_id):
-    task = get_object_or_404(Task, id=task_id)
-
-    if request.method == "POST":
-        form = TaskEditForm(request.POST, instance=task, board=task.column.board)
-        if form.is_valid():
-            form.save()
-            return redirect(f"{reverse("tasks:index")}?board={task.column.board.id}")
-    else:
-        form = TaskEditForm(instance=task, board=task.column.board)
-
-    return render(
-        request,
-        "tasks/forms/edit_task.html",
-        {
-            "form": form,
-            "board_id": task.column.board.id,
-            "task": task,
-        },
     )
 
 @login_required

@@ -75,8 +75,12 @@
                             </a>
 
                             <div class="d-flex flex-row board-actions">
-                                {% comment %} <a href="{% url 'tasks:edit_board' board_id=board.id %}"
-                                    class="ps-1">
+                                <a href="{% url 'tasks:edit_board' board_id=board.id %}"
+                                    hx-get="{% url 'tasks:edit_board' board_id=board.id %}"
+                                    hx-target="#modal-edit-board-container"
+                                    hx-swap="innerHTML"
+                                    class="ps-1 text-secondary"
+                                    title="Редактировать доску">
                                     <svg class="icon icon-tabler icons-tabler-outline icon-tabler-pencil block-title__icon"
                                         xmlns="http://www.w3.org/2000/svg" color="grey" 
                                         width="24" height="24" viewBox="0 0 24 24" fill="none" 
@@ -86,23 +90,8 @@
                                         <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
                                         <path d="M13.5 6.5l4 4" />
                                     </svg>
-                                </a> {% endcomment %}
+                                </a>
                                 
-                                <button class="ps-1" type="button" 
-                                        hx-get="{% url 'tasks:get_edit_board_form' board_id=board.id %}" 
-                                        hx-target="#modal-edit-board-container">
-                                    <svg class="icon icon-tabler icons-tabler-outline icon-tabler-pencil block-title__icon"
-                                        xmlns="http://www.w3.org/2000/svg" color="grey" 
-                                        width="24" height="24" viewBox="0 0 24 24" fill="none" 
-                                        stroke="currentColor" stroke-width="2" 
-                                        stroke-linecap="round" stroke-linejoin="round">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
-                                        <path d="M13.5 6.5l4 4" />
-                                    </svg>
-                                </button>
-                                <div id="modal-edit-board-container"></div>
-
                                 <a href="#" title="Удалить доску"
                                     onclick="return confirm('Вы уверены, что хотите удалить доску?');" 
                                     class="ps-1">
@@ -153,8 +142,13 @@
                                 </h2>
 
                                 <div class="column-actions ms-2">
-                                    <a href="{% url 'tasks:edit_column' column_id=column.id %}" 
-                                    title="Редактировать колонку">
+                                    <a
+                                        href="{% url 'tasks:edit_column' column_id=column.id %}"
+                                        hx-get="{% url 'tasks:edit_column' column_id=column.id %}"
+                                        hx-target="#modal-edit-column-container"
+                                        hx-swap="innerHTML"
+                                        class="ps-1 text-secondary"
+                                        title="Редактировать колонку">
                                         <svg class="icon icon-tabler icons-tabler-outline icon-tabler-pencil"
                                             xmlns="http://www.w3.org/2000/svg"
                                             color="grey"
@@ -223,7 +217,13 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-auto d-flex">
-                                                            <a href="{% url 'tasks:edit_task' task_id=task.id %}" class="ps-1">
+                                                            <a
+                                                                href="{% url 'tasks:edit_task' task_id=task.id %}"
+                                                                hx-get="{% url 'tasks:edit_task' task_id=task.id %}"
+                                                                hx-target="#modal-edit-task-container"
+                                                                hx-swap="innerHTML"
+                                                                class="ps-1 text-secondary"
+                                                                title="Редактировать задачу">
                                                                 <svg class="icon icon-tabler icons-tabler-outline icon-tabler-pencil block-title__icon"
                                                                     xmlns="http://www.w3.org/2000/svg" color="grey" 
                                                                     width="24" height="24" viewBox="0 0 24 24" fill="none" 
@@ -288,7 +288,12 @@
                                         </div>
                                     {% endfor %}
                                     
-                                    <a href="{% url 'tasks:create_task' column_id=column.id %}"  class="btn btn-animate-icon btn-animate-icon-rotate ps-1" title="Добавить задачу">
+                                    <a href="{% url 'tasks:create_task' column_id=column.id %}"
+                                        hx-post="{% url 'tasks:create_task' column_id=column.id %}" 
+                                        hx-target="#modal-edit-task-container" 
+                                        hx-swap="innerHTML" 
+                                        class="btn btn-animate-icon btn-animate-icon-rotate ps-1" 
+                                        title="Добавить задачу">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
                                             <path d="M12 5l0 14"></path>
                                             <path d="M5 12l14 0"></path>
@@ -356,6 +361,10 @@
             </div>
         </div>
     </div>
+
+    <div id="modal-edit-board-container"></div>
+    <div id="modal-edit-column-container"></div>
+    <div id="modal-edit-task-container"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
     <script>

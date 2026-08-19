@@ -89,3 +89,15 @@
     background: transparent;
     outline: none;
 }
+
+.board-edit-btn {
+    border: none;
+    background: transparent;
+    padding: 0 0 0 4px;
+    color: grey;
+    cursor: pointer;
+}
+
+.board-edit-btn:hover {
+    color: var(--tblr-primary);
+}

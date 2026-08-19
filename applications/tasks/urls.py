@@ -8,7 +8,6 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("create_board/", views.create_board, name="create_board"),
     path("edit_board/<int:board_id>", views.edit_board, name="edit_board"),
-    path("get_edit_board_form/<int:board_id>", views.get_edit_board_form, name="get_edit_board_form"),
     path("delete_board/<int:board_id>", views.delete_board, name="delete_board"),
 
     path("create_column/<int:board_id>/", views.create_column, name="create_column"),

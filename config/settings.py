@@ -44,7 +44,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'django_htmx',
+    # 'django_htmx',
+
+    "crispy_forms",
+    "crispy_bootstrap5",
+    "django_htmx",
+    "django_htmx_modal_forms",
 ]
 
 MIDDLEWARE = [

@@ -1,5 +1,6 @@
 
 {% load static %}
+{% load htmx_modal_forms %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,6 +10,9 @@
     <link href="{% static 'css/tabler.min.css' %}" rel="stylesheet">
     <link href="{% static 'css/base.css' %}" rel="stylesheet">
 
+    {% comment %} <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script> {% endcomment %}
+    <script src="{% static 'django_htmx/htmx.min.js' %}"></script>
+    {% htmx_modal_script %}
 </head>
 <body hx-headers='{"x-csrftoken": "{{ csrf_token }}"}'>
         <script>
@@ -125,6 +129,7 @@
 			
     {% comment %} <script src="{% static 'lib/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script> {% endcomment %}
     <script src="{% static 'js/tabler.min.js' %}"></script>
+
 
 </body>
 </html>

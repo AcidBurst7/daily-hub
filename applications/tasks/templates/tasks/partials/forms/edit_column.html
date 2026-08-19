@@ -1,0 +1,44 @@
+<div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form hx-post="{% url 'tasks:edit_column' column_id=column.id %}" 
+                hx-target="#modal-edit-column-container" 
+                hx-swap="innerHTML">
+                {% csrf_token %}
+
+                <div class="modal-header">
+                    <h3 class="modal-title">Редактирование колонки</h3>
+                    <button type="button" 
+                            class="btn-close" 
+                            hx-get="{% url 'tasks:clear_modal' %}" 
+                            hx-target="#modal-edit-column-container"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <p>{{ edit_column_form.name.label }}</p>
+                        {{ edit_column_form.name }}
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn me-auto"
+                        hx-get="{% url 'tasks:clear_modal' %}"
+                        hx-target="#modal-edit-column-container"
+                        hx-swap="innerHTML">
+                        Выход
+                    </button>
+                    <button type="submit" class="btn btn-primary btn-5 ms-auto">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" 
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+                        stroke-linejoin="round" class="icon icon-2">
+                            <path d="M12 5l0 14"></path>
+                            <path d="M5 12l14 0"></path>
+                        </svg>
+                        Сохранить изменения
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
