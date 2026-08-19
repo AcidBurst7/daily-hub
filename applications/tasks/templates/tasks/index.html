@@ -8,46 +8,20 @@
                 <h2 class="page-title">Задачи</h2>
             </div>
             <div class="col-auto ms-auto d-print-none">
-                <button type="button" class="btn btn-outline btn-primary" data-bs-toggle="modal" data-bs-target="#createBoardModal">
+                <a
+                    href="{% url 'tasks:edit_board' board_id=0 %}"
+                    hx-get="{% url 'tasks:edit_board' board_id=0 %}"
+                    hx-target="#modal-edit-board-container"
+                    hx-swap="innerHTML"
+                    class="btn btn-primary"
+                >
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" 
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-2">
                         <path d="M12 5l0 14"></path>
                         <path d="M5 12l14 0"></path>
                     </svg>
                     Создать доску
-                </button>
-                <div class="modal fade" id="createBoardModal" tabindex="-1" aria-labelledby="createBoardModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Новая доска</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
-                            </div>
-                            <form id="createBoardForm" method="post" action="{% url 'tasks:create_board' %}">
-                                {% csrf_token %}
-                                <div class="modal-body">
-                                    <div class="mb-3">
-                                        {% comment %} <label class="form-label">Название</label> {% endcomment %}
-                                        <p>{{ create_board_form.name.label }}</p>
-                                        {{ create_board_form.name }}
-                                        {% comment %} <input type="text" class="form-control" name="example-text-input" placeholder="Название вашей новой доски"> {% endcomment %}
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <a href="#" class="btn btn-link link-secondary btn-3" data-bs-dismiss="modal"> Выход </a>
-                                    <button type="submit" class="btn btn-primary btn-5 ms-auto">
-                                        <!-- Download SVG icon from http://tabler.io/icons/icon/plus -->
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-2">
-                                            <path d="M12 5l0 14"></path>
-                                            <path d="M5 12l14 0"></path>
-                                        </svg>
-                                        Создать новую доску
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+                </a>
             </div>
         </div>
     </div>

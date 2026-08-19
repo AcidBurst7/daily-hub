@@ -57,54 +57,76 @@ def columns(request, board_id: int):
 
 @login_required
 def create_board(request):
+    board = None
     if request.method == 'POST':
-        create_board_form = BoardEditForm(request.POST)
-        if create_board_form.is_valid():
-            cleaned_data = create_board_form.cleaned_data
-            new_board=Board(
+        form = BoardEditForm(request.POST)
+        if form.is_valid():
+            cleaned_data = form.cleaned_data
+            board=Board(
                 name=cleaned_data["name"], 
                 user=request.user
             )
-            new_board.save()
-
-            return redirect(
-                f"{reverse("tasks:index")}?board={new_board.id}"
-            )
-    return render(request, 'tasks/index.html', {
-            'create_board_form': BoardEditForm(),
-            'data': get_user_boards(request.user),
-        }
-    )
-
-@login_required
-def edit_board(request, board_id: int):
-    board = get_object_or_404(
-        Board,
-        id=board_id,
-        user=request.user
-    )
-    
-    if request.method == 'POST':
-        form = BoardEditForm(request.POST)
-
-        if form.is_valid():
-            board.name = form.cleaned_data["name"]
-            board.save(update_fields=["name"])
+            board.save()
 
             response = HttpResponse()
             response["HX-Redirect"] = f"{reverse("tasks:index")}?board={board.id}"
             return response
+    return render(request, 'tasks/index.html', {
+            'create_board_form': BoardEditForm(),
+            'data': get_user_boards(request.user),
+            'is_new': True,
+            'board': board,
+            "board_id": board.id if board else 0,
+        }
+    )
+
+@login_required
+def edit_board(request, board_id=0):
+    board = None
+
+    if board_id:
+        board = get_object_or_404(
+            Board,
+            id=board_id,
+            user=request.user
+        )
+
+    if request.method == "POST":
+        form = BoardEditForm(request.POST)
+
+        if form.is_valid():
+            name = form.cleaned_data["name"]
+
+            if board:
+                # Редактирование
+                board.name = name
+                board.save(update_fields=["name"])
+            else:
+                # Создание
+                board = Board.objects.create(
+                    name=name,
+                    user=request.user
+                )
+
+            response = HttpResponse()
+            response["HX-Redirect"] = (
+                f"{reverse('tasks:index')}?board={board.id}"
+            )
+            return response
+
     else:
         form = BoardEditForm(
-            initial={"name": board.name}
+            initial={"name": board.name if board else ""}
         )
 
     return render(
-        request, 
-        'tasks/partials/forms/edit_board.html', 
+        request,
+        "tasks/partials/forms/edit_board.html",
         {
-            'edit_board_form': form,
-            'board': board
+            "edit_board_form": form,
+            "is_new": board is None,
+            "board": board,
+            "board_id": board.id if board else 0,
         }
     )
 
