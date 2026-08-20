@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_POST
-from .models import Board, Column, Task
+from .models import Board, Column, Task, CheckList, CheckListItem
 from .forms import (
     BoardEditForm, 
     ColumnEditForm, 
@@ -304,6 +304,28 @@ def complete_task(request, task_id):
 
         return JsonResponse({
             "completed": completed
+        })
+
+    return JsonResponse(
+        {"error": "Invalid request"},
+        status=400
+    )
+
+@login_required
+def create_checklist(request, task_id: int):
+    task = get_object_or_404(
+        Task, 
+        id=task_id,
+        column__board__user=request.user
+    )
+    
+    if request.method == "POST":
+        checklist = CheckList()
+
+        task.save(update_fields=["completed_at"])
+
+        return JsonResponse({
+            "completed": ...
         })
 
     return JsonResponse(

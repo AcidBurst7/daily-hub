@@ -1,5 +1,5 @@
-<div class="modal modal-lg fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
-    <div class="modal-dialog">
+<div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <form hx-post="{% if is_new %}{% url 'tasks:create_task' column_id=column.id %}{% else %}{% url 'tasks:edit_task' task_id=task.id %}{% endif %}" 
                 hx-target="#modal-edit-task-container" 
@@ -45,6 +45,8 @@
                             {{ form.description }}
                             {{ form.description.errors }}
                         </div>
+
+                        <hr>
                     </div>
 
                     <div class="row">

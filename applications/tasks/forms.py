@@ -85,15 +85,9 @@ class TaskEditForm(forms.ModelForm):
 class ChecklistEditForm(forms.ModelForm):
     class Meta:
         model = CheckList
-        fields = ["task", "name"]
-        labels = {
-            "task": "",
-            "name": "Название"
-        }
+        fields = ["name"]
+        labels = {"name": "Название"}
         widgets = {
-            "task": forms.TextInput(
-                attrs={"class": "form-control"}
-            ),
             "name": forms.TextInput(
                 attrs={"class": "form-control"}
             )
