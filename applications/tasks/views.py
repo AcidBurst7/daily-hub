@@ -311,6 +311,15 @@ def complete_task(request, task_id):
         status=400
     )
 
+
+@login_required
+def delete_task(request, task_id):
+    task = Task.objects.filter(id=task_id).first()
+    if request.method == "POST" and task:
+        task.delete()
+    return redirect(f"{reverse("tasks:index")}?board={task.column.board.id}")
+
+
 @login_required
 def create_checklist(request, task_id: int):
     task = get_object_or_404(
@@ -321,21 +330,14 @@ def create_checklist(request, task_id: int):
     
     if request.method == "POST":
         checklist = CheckList()
-
-        task.save(update_fields=["completed_at"])
+        checklist
+        checklist.save(update_fields=["completed_at"])
 
         return JsonResponse({
-            "completed": ...
+            "completed": True
         })
 
     return JsonResponse(
         {"error": "Invalid request"},
         status=400
     )
-
-@login_required
-def delete_task(request, task_id):
-    task = Task.objects.filter(id=task_id).first()
-    if request.method == "POST" and task:
-        task.delete()
-    return redirect(f"{reverse("tasks:index")}?board={task.column.board.id}")
