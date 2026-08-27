@@ -8,7 +8,7 @@ from applications.tasks.models import Board, Column, Task, CheckList, CheckListI
 
 
 class Command(BaseCommand):
-    help = "Create demo data for the task management application"
+    help = "Создать демо-данные для пользователя"
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -200,7 +200,7 @@ class Command(BaseCommand):
 
         self.stdout.write(
             self.style.SUCCESS(
-                "Demo data created successfully."
+                "Демо-данные успешно созданы."
             )
         )
 
