@@ -20,7 +20,6 @@
     visibility: visible;
 }
 
-
 .board-action-icon,
 .delete-board-btn {
     display: flex;
@@ -32,7 +31,6 @@
 
     cursor: pointer;
 }
-
 
 .board-action-icon:hover svg,
 .delete-board-btn:hover svg {
