@@ -264,6 +264,9 @@
                                         </div>
                                     {% endfor %}
                                     
+                                    
+                                </div>
+                                <p class="mt-2">
                                     <a href="{% url 'tasks:create_task' column_id=column.id %}"
                                         hx-post="{% url 'tasks:create_task' column_id=column.id %}" 
                                         hx-target="#modal-edit-task-container" 
@@ -276,7 +279,7 @@
                                         </svg>
                                         Добавить задачу
                                     </a>
-                                </div>
+                                </p>
                             </div>
                         </div>
                         {% endfor %}
@@ -344,72 +347,151 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
     <script>
-        function updateEmptyColumn(list) { 
-            const hasTasks = list.querySelector(".task-card"); 
-            let placeholder = list.querySelector(".empty-column"); 
-            
-            if (!hasTasks && !placeholder) { 
-                placeholder = document.createElement("div"); 
-                placeholder.className = "empty-column"; 
-                placeholder.textContent = "Перетащите задачу сюда или создай новую задачу"; 
-                list.appendChild(placeholder); 
-            } 
-            
-            if (hasTasks && placeholder) { 
-                placeholder.remove(); 
-            } 
-        } 
-        
-        function getTaskOrders(list) { 
-            return Array.from( 
-                list.querySelectorAll(".task-card") 
-            ).map((task, index) => ({ 
-                task_id: task.dataset.taskId, order: index 
-            })); 
-        } 
-        
-        document.querySelectorAll(".task-list").forEach(list => { 
-            new Sortable(list, 
-            { 
-                group: "tasks", 
-                animation: 150, 
-                onEnd: function(evt) { 
-                    updateEmptyColumn(evt.from); 
-                    updateEmptyColumn(evt.to); 
-            
-                    // Новый порядок задач в новой колонке 
-                    const newOrders = getTaskOrders(evt.to); 
+        function updateEmptyColumn(list) {
+        const hasTasks = list.querySelector(".task-card");
+        let placeholder = list.querySelector(".empty-column");
 
-                    // Новый порядок задач в старой колонке 
-                    const oldOrders = getTaskOrders(evt.from); 
+        if (!hasTasks && !placeholder) {
+            placeholder = document.createElement("div");
+            placeholder.className = "empty-column text-secondary text-center";
+            placeholder.textContent =
+                "Перетащите задачу сюда или создай новую задачу";
 
-                    fetch("{% url 'tasks:move_task' %}", 
-                    { 
-                        method: "POST", 
-                        headers: { 
-                            "Content-Type": "application/json", 
-                            "X-CSRFToken": getCookie("csrftoken") 
-                        }, 
-                        body: JSON.stringify({ 
-                            task_id: evt.item.dataset.taskId, 
-                            column_id: evt.to.dataset.columnId, // Новая колонка
-                            order: evt.newIndex, // Новая позиция перемещённой задачи
-                            orders: newOrders, // Полный порядок новой колонки 
-                            old_orders: oldOrders, // Полный порядок старой колонки 
-                            old_column_id: evt.from.dataset.columnId, // ID старой колонки 
-                        }) 
-                    }) .then(response => { 
-                        if (!response.ok) { 
-                            throw new Error("Ошибка перемещения задачи"); 
-                        } 
-                        return response.json(); 
-                    }) .then(data => { 
-                        console.log("Задача перемещена:", data); 
-                    }) .catch(error => { 
-                        console.error(error); 
-                    }); 
-                } 
-            }); 
+            list.appendChild(placeholder);
+        }
+
+        if (hasTasks && placeholder) {
+            placeholder.remove();
+        }
+    }
+
+
+    function getTaskOrders(list) {
+        return Array.from(
+            list.querySelectorAll(".task-card")
+        ).map((task, index) => ({
+            task_id: task.dataset.taskId,
+            order: index
+        }));
+    }
+
+
+    document.querySelectorAll(".task-list").forEach((list) => {
+        new Sortable(list, {
+            group: "tasks",
+            animation: 150,
+
+            // Только карточки являются элементами сортировки
+            draggable: ".task-card",
+
+            onEnd: function (evt) {
+                const item = evt.item;
+                const toList = evt.to;
+                const fromList = evt.from;
+
+                // Кнопка добавления задачи
+                const addTaskButton = toList.querySelector(
+                    'a[href*="create_task"]'
+                );
+
+                // Всегда ставим карточку перед кнопкой
+                if (addTaskButton) {
+                    addTaskButton.before(item);
+                }
+
+                // Обновляем пустые колонки
+                updateEmptyColumn(fromList);
+                updateEmptyColumn(toList);
+
+                // Получаем порядок задач
+                const newOrders = getTaskOrders(toList);
+                const oldOrders = getTaskOrders(fromList);
+
+                fetch("{% url 'tasks:move_task' %}", {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": getCookie("csrftoken")
+                    },
+
+                    body: JSON.stringify({
+                        task_id: item.dataset.taskId,
+                        column_id: toList.dataset.columnId,
+
+                        order: newOrders.find(
+                            task => task.task_id === item.dataset.taskId
+                        )?.order ?? 0,
+
+                        orders: newOrders,
+                        old_orders: oldOrders,
+                        old_column_id: fromList.dataset.columnId
+                    })
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(
+                                "Ошибка перемещения задачи"
+                            );
+                        }
+
+                        return response.json();
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+            }
+        });
+    });
+
+
+    document
+        .querySelectorAll(".task-complete-checkbox")
+        .forEach((checkbox) => {
+
+            checkbox.addEventListener("change", function () {
+                const taskId = this.dataset.taskId;
+
+                fetch(`/tasks/task/${taskId}/complete/`, {
+                    method: "POST",
+
+                    headers: {
+                        "X-CSRFToken": getCookie("csrftoken")
+                    }
+                })
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw new Error(
+                                "Ошибка изменения статуса задачи"
+                            );
+                        }
+
+                        return response.json();
+                    })
+                    .then((data) => {
+                        const title = this
+                            .closest(".card-body")
+                            .querySelector(".card-title");
+
+                        if (data.completed) {
+                            title.classList.add(
+                                "text-decoration-line-through",
+                                "text-secondary"
+                            );
+                        } else {
+                            title.classList.remove(
+                                "text-decoration-line-through",
+                                "text-secondary"
+                            );
+                        }
+                    })
+                    .catch((error) => {
+                        console.error(
+                            "Ошибка при изменении статуса:",
+                            error
+                        );
+                    });
+            });
         });
 
         document.querySelectorAll(".task-complete-checkbox").forEach(checkbox => {

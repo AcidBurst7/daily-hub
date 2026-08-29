@@ -39,10 +39,6 @@
     stroke: #206bc4;
 }
 
-.task-list {
-    min-height: 150px;
-}
-
 .empty-column {
     min-height: 120px;
     display: flex;
