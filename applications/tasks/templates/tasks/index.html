@@ -109,7 +109,7 @@
                 {% endif %}
                     <div class="d-flex flex-row">
                         {% for column in board.columns.all %}
-                        <div class="col-lg-3 col-md-6 col-xs-12 col-sm-12">
+                        <div class="col-lg-4 col-md-6 col-xs-12 col-sm-12">
                             <div class="column-header d-flex align-items-center">
                                 <h2 class="mb-0 block-title">
                                     {{ column.name }}
@@ -186,11 +186,15 @@
                                                                             {{ task.description }}
                                                                         </div>
                                                                     {% endif %}
+
+                                                                    <span>Порядок: {{ task.order }}</span>
+
                                                                 </div>
                                                                 
                                                             </div>
                                                         </div>
                                                         <div class="col-auto d-flex">
+                                                            <!-- Иконка "Редактировать задачу" -->
                                                             <a
                                                                 href="{% url 'tasks:edit_task' task_id=task.id %}"
                                                                 hx-get="{% url 'tasks:edit_task' task_id=task.id %}"
@@ -208,6 +212,7 @@
                                                                     <path d="M13.5 6.5l4 4" />
                                                                 </svg>
                                                             </a>
+                                                            <!-- Иконка "Удалить задачу" -->
                                                             <a href="#" class="ps-1" 
                                                                 title="Удалить задачу"  title="Удалить доску" 
                                                                 onclick="return confirm('Вы уверены, что хотите удалить задачу?');">
@@ -342,44 +347,81 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
     <script>
-        function updateEmptyColumn(list) {
-            const hasTasks = list.querySelector(".task-card");
+        function updateEmptyColumn(list) { 
+            const hasTasks = list.querySelector(".task-card"); 
+            let placeholder = list.querySelector(".empty-column"); 
+            
+            if (!hasTasks && !placeholder) { 
+                placeholder = document.createElement("div"); 
+                placeholder.className = "empty-column"; 
+                placeholder.textContent = "Перетащите задачу сюда или создай новую задачу"; 
+                list.appendChild(placeholder); 
+            } 
+            
+            if (hasTasks && placeholder) { 
+                placeholder.remove(); 
+            } 
+        } 
+        
+        function getTaskOrders(list) { 
+            return Array.from( 
+                list.querySelectorAll(".task-card") 
+            ).map((task, index) => ({ 
+                task_id: task.dataset.taskId, order: index 
+            })); 
+        } 
+        
+        document.querySelectorAll(".task-list").forEach(list => { 
+            new Sortable(list, 
+            { 
+                group: "tasks", 
+                animation: 150, 
+                onEnd: function(evt) { 
+                    updateEmptyColumn(evt.from); updateEmptyColumn(evt.to); 
+            
+                    // Новый порядок задач в новой колонке 
+                    const newOrders = getTaskOrders(evt.to); 
 
-            let placeholder = list.querySelector(".empty-column");
+                    // Новый порядок задач в старой колонке 
+                    const oldOrders = getTaskOrders(evt.from); 
 
-            if (!hasTasks && !placeholder) {
-                placeholder = document.createElement("div");
-                placeholder.className = "empty-column";
-                placeholder.textContent = "Перетащите задачу сюда или создай новую задачу";
-                list.appendChild(placeholder);
-            }
-
-            if (hasTasks && placeholder) {
-                placeholder.remove();
-            }
-        }
-
-        document.querySelectorAll(".task-list").forEach(list => {
-            new Sortable(list, {
-                group: "tasks",
-                animation: 150,
-                onEnd: function(evt) {
-                    updateEmptyColumn(evt.from);
-                    updateEmptyColumn(evt.to);
-
-                    fetch("{% url 'tasks:move_task' %}", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "X-CSRFToken": getCookie("csrftoken")
-                        },
-                        body: JSON.stringify({
-                            task_id: evt.item.dataset.taskId,
-                            column_id: evt.to.dataset.columnId
-                        })
-                    });
-                }
-            });
+                    fetch("{% url 'tasks:move_task' %}", 
+                    { 
+                        method: "POST", 
+                        headers: { 
+                            "Content-Type": "application/json", 
+                            "X-CSRFToken": getCookie("csrftoken") 
+                        }, 
+                        body: JSON.stringify({ 
+                            task_id: evt.item.dataset.taskId, 
+                            
+                            // Новая колонка 
+                            column_id: evt.to.dataset.columnId, 
+                            
+                            // Новая позиция перемещённой задачи 
+                            order: evt.newIndex, 
+                            
+                            // Полный порядок новой колонки 
+                            orders: newOrders, 
+                            
+                            // Полный порядок старой колонки 
+                            old_orders: oldOrders, 
+                            
+                            // ID старой колонки 
+                            old_column_id: evt.from.dataset.columnId 
+                        }) 
+                    }) .then(response => { 
+                        if (!response.ok) { 
+                            throw new Error("Ошибка перемещения задачи"); 
+                        } 
+                        return response.json(); 
+                    }) .then(data => { 
+                        console.log("Задача перемещена:", data); 
+                    }) .catch(error => { 
+                        console.error(error); 
+                    }); 
+                } 
+            }); 
         });
 
         document.querySelectorAll(".task-complete-checkbox").forEach(checkbox => {

@@ -268,20 +268,26 @@ def edit_task(request, task_id: int):
 def move_task(request):
     data = json.loads(request.body)
 
-    task = get_object_or_404(
-        Task, 
-        id=data["task_id"], 
-        column__board__user=request.user
-    )
+    task_id = data["task_id"]
+    column_id = data["column_id"]
+    orders = data.get("orders", [])
+    old_orders = data.get("old_orders", [])
 
-    column = get_object_or_404(
-        Column,
-        id=data["column_id"],
-        board__user=request.user
-    )
+    task = Task.objects.get(id=task_id)
+    task.column_id = column_id
+    task.save(update_fields=["column"])
 
-    task.column = column
-    task.save()
+    # Сохраняем порядок задач в новой колонке
+    for item in orders:
+        Task.objects\
+            .filter(id=item["task_id"])\
+            .update(order=item["order"])
+
+    # Сохраняем порядок задач в старой колонке
+    for item in old_orders:
+        Task.objects\
+            .filter(id=item["task_id"])\
+            .update(order=item["order"])
 
     return JsonResponse({"status": True})
 
@@ -317,7 +323,19 @@ def delete_task(request, task_id):
     task = Task.objects.filter(id=task_id).first()
     if request.method == "POST" and task:
         task.delete()
-    return redirect(f"{reverse("tasks:index")}?board={task.column.board.id}")
+
+        tasks = Task.objects\
+                    .filter(column_id=task.column.id)\
+                    .order_by("order")
+        order = 0
+        for task in tasks:
+            task.order = order
+            task.save(update_fields=["order"])
+            order += 1
+
+    return redirect(
+        f"{reverse("tasks:index")}?board={task.column.board.id}"
+    )
 
 
 @login_required
