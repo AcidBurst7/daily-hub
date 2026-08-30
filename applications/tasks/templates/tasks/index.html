@@ -493,36 +493,5 @@
                     });
             });
         });
-
-        document.querySelectorAll(".task-complete-checkbox").forEach(checkbox => {
-                checkbox.addEventListener("change", function(){
-                    let taskId = this.dataset.taskId;
-
-                    fetch(`/tasks/task/${taskId}/complete/`, {
-                        method: "POST",
-                        headers: {
-                            "X-CSRFToken": getCookie("csrftoken")
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-
-                        let title = this.closest(".card-body").querySelector(".card-title");
-
-                        if(data.completed) {
-                            title.classList.add(
-                                "text-decoration-line-through",
-                                "text-secondary"
-                            );
-                        } else {
-                            title.classList.remove(
-                                "text-decoration-line-through",
-                                "text-secondary"
-                            );
-                        }
-                    });
-                });
-
-            });
-    </script>
+</script>
 {% endblock %}
