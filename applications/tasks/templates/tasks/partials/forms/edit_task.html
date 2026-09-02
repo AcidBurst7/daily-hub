@@ -1,5 +1,5 @@
 <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <form hx-post="{% if is_new %}{% url 'tasks:create_task' column_id=column.id %}{% else %}{% url 'tasks:edit_task' task_id=task.id %}{% endif %}" 
                 hx-target="#modal-edit-task-container" 
@@ -9,9 +9,9 @@
                 <div class="modal-header">
                     <h3 class="modal-title">
                         {% if is_new %}
-                            Редактирование задачи
-                        {% else %}
                             Создание задачи
+                        {% else %}
+                            Редактирование задачи
                         {% endif %}
                     </h3>
                 </div>
@@ -48,6 +48,42 @@
 
                         <hr>
                     </div>
+
+                    <div class="row">
+                        <div class="col mb-3">
+                            <div id="task-checklist">
+                                {% if not is_new %}
+                                    <div class="d-flex align-items-center justify-content-between mb-3">
+                                        <h4 class="mb-0">Чеклист</h4>
+                                        <button
+                                            type="button"
+                                            class="btn btn-sm btn-outline-primary"
+                                            hx-get="{% url 'tasks:create_checklist' task_id=task.id %}"
+                                            hx-target="#task-checklist-content"
+                                            hx-swap="innerHTML"
+                                        >
+                                            + Добавить чеклист
+                                        </button>
+                                    </div>
+
+                                    <div id="task-checklist-content">
+                                        {% for checklist in task.checklists.all %}
+                                            {% include "tasks/partials/checklist.html" %}
+                                        {% empty %}
+                                            <div class="text-muted small">
+                                                Чеклист пока не создан
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <div class="text-muted small">
+                                        Сначала сохраните задачу, чтобы добавить чеклист.
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
 
                     <div class="row">
                         <div class="mb-3 col">

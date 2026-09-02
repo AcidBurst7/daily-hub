@@ -347,15 +347,45 @@ def create_checklist(request, task_id: int):
     )
     
     if request.method == "POST":
-        checklist = CheckList()
-        checklist
-        checklist.save(update_fields=["completed_at"])
+        checklist = CheckList.objects.create(
+            task=task,
+            name=request.POST.get("name")
+        )
 
-        return JsonResponse({
-            "completed": True
-        })
+        return render(
+                request,
+                "tasks/partials/checklist.html",
+                {
+                    "checklist": checklist
+                },
+            )
 
-    return JsonResponse(
-        {"error": "Invalid request"},
-        status=400
-    )
+
+
+@login_required
+def edit_checklist_name(request, checklist_id: int = 0):
+    ...
+
+@login_required
+def delete_checklist(request, checklist_id: int = 0):
+    ...
+
+@login_required
+def create_checklist_item_form(request, checklist_id: int = 0):
+    ...
+
+@login_required
+def create_checklist_item(request, checklist_id: int = 0):
+    ...
+
+@login_required
+def clear_checklist_item_form(request):
+    ...
+
+@login_required
+def toggle_checklist_item(request, item_id: int = 0):
+    ...
+
+@login_required
+def delete_checklist_item(request, item_id: int = 0):
+    ...

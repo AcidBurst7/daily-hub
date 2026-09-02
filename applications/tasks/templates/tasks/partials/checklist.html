@@ -1,0 +1,78 @@
+<div
+    class="checklist border rounded p-3 mb-3"
+    id="checklist-{{ checklist.id }}"
+>
+
+    <div class="d-flex align-items-center justify-content-between mb-3">
+
+        <div id="checklist-title-{{ checklist.id }}">
+
+            <h5 class="mb-1">
+                {{ checklist.name }}
+            </h5>
+
+            <small class="text-muted">
+                {{ checklist.items.count }} пунктов
+            </small>
+
+        </div>
+
+        <div class="d-flex gap-1">
+
+            <button
+                type="button"
+                class="btn btn-sm btn-outline-secondary"
+                hx-get="{% url 'tasks:edit_checklist_name' checklist_id=checklist.id %}"
+                hx-target="#checklist-title-{{ checklist.id }}"
+                hx-swap="innerHTML"
+            >
+                Изменить
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-sm btn-outline-danger"
+                hx-delete="{% url 'tasks:delete_checklist' checklist_id=checklist.id %}"
+                hx-target="#checklist-{{ checklist.id }}"
+                hx-swap="outerHTML"
+                hx-confirm="Удалить весь чеклист?"
+            >
+                Удалить
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div id="checklist-items-{{ checklist.id }}">
+
+        {% for item in checklist.items.all %}
+
+            {% include "tasks/partials/checklist_item.html" %}
+
+        {% empty %}
+
+            <div class="text-muted small mb-3">
+                Пунктов пока нет
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+
+    <div id="checklist-new-item-{{ checklist.id }}"></div>
+
+
+    <button
+        type="button"
+        class="btn btn-sm btn-outline-primary mt-2"
+        hx-get="{% url 'tasks:create_checklist_item_form' checklist_id=checklist.id %}"
+        hx-target="#checklist-new-item-{{ checklist.id }}"
+        hx-swap="innerHTML"
+    >
+        + Добавить пункт
+    </button>
+
+</div>

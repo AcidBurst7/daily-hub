@@ -1,0 +1,38 @@
+<div
+    id="checklist-item-{{ item.id }}"
+    class="d-flex align-items-center gap-2 py-2 border-bottom"
+>
+
+    <div class="form-check flex-grow-1">
+
+        <input
+            class="form-check-input"
+            type="checkbox"
+            id="checklist-item-checkbox-{{ item.id }}"
+            {% if item.done %}checked{% endif %}
+            hx-post="{% url 'tasks:toggle_checklist_item' item_id=item.id %}"
+            hx-target="#checklist-item-{{ item.id }}"
+            hx-swap="outerHTML"
+        >
+
+        <label
+            class="form-check-label {% if item.done %}text-decoration-line-through text-muted{% endif %}"
+            for="checklist-item-checkbox-{{ item.id }}"
+        >
+            {{ item.title }}
+        </label>
+
+    </div>
+
+    <button
+        type="button"
+        class="btn btn-sm btn-outline-danger"
+        hx-delete="{% url 'tasks:delete_checklist_item' item_id=item.id %}"
+        hx-target="#checklist-item-{{ item.id }}"
+        hx-swap="outerHTML"
+        hx-confirm="Удалить пункт?"
+    >
+        ×
+    </button>
+
+</div>

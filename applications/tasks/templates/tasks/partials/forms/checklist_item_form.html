@@ -1,0 +1,38 @@
+<form
+    class="mb-2"
+    hx-post="{% url 'tasks:create_checklist_item' checklist_id=checklist.id %}"
+    hx-target="#checklist-items-{{ checklist.id }}"
+    hx-swap="beforeend"
+>
+    {% csrf_token %}
+
+    <div class="input-group">
+
+        <input
+            type="text"
+            name="title"
+            class="form-control"
+            placeholder="Новый пункт..."
+            autofocus
+        >
+
+        <button
+            type="submit"
+            class="btn btn-primary"
+        >
+            Добавить
+        </button>
+
+        <button
+            type="button"
+            class="btn btn-outline-secondary"
+            hx-get="{% url 'tasks:clear_checklist_item_form' %}"
+            hx-target="#checklist-new-item-{{ checklist.id }}"
+            hx-swap="innerHTML"
+        >
+            ×
+        </button>
+
+    </div>
+
+</form>
