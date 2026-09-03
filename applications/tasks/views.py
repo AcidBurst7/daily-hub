@@ -389,3 +389,7 @@ def toggle_checklist_item(request, item_id: int = 0):
 @login_required
 def delete_checklist_item(request, item_id: int = 0):
     ...
+
+@login_required
+def checklist_create_form(request, task_id: int = 0):
+    ...
