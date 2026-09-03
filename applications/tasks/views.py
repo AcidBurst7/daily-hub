@@ -317,7 +317,6 @@ def complete_task(request, task_id):
         status=400
     )
 
-
 @login_required
 def delete_task(request, task_id):
     task = Task.objects.filter(id=task_id).first()
@@ -337,7 +336,6 @@ def delete_task(request, task_id):
         f"{reverse("tasks:index")}?board={task.column.board.id}"
     )
 
-
 @login_required
 def create_checklist(request, task_id: int):
     task = get_object_or_404(
@@ -354,13 +352,17 @@ def create_checklist(request, task_id: int):
 
         return render(
                 request,
-                "tasks/partials/checklist.html",
-                {
+                "tasks/partials/checklist.html",{
                     "checklist": checklist
                 },
             )
-
-
+    return render(
+        request,
+        "tasks/partials/forms/checklist_create_form.html",
+        {
+            "task": task,
+        },
+    )
 
 @login_required
 def edit_checklist_name(request, checklist_id: int = 0):
@@ -392,4 +394,8 @@ def delete_checklist_item(request, item_id: int = 0):
 
 @login_required
 def checklist_create_form(request, task_id: int = 0):
+    ...
+
+@login_required
+def clear_checklist_form(request):
     ...

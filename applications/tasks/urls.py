@@ -29,7 +29,7 @@ urlpatterns = [
     path("create_checklist_item_form/<int:checklist_id>/", views.create_checklist_item_form, name="create_checklist_item_form"),
     path("create_checklist_item/<int:checklist_id>/", views.create_checklist_item, name="create_checklist_item"),
     path("clear_checklist_item_form/", views.clear_checklist_item_form, name="clear_checklist_item_form"),
-
+    
     path("toggle_checklist_item/<int:item_id>/",
         views.toggle_checklist_item,
         name="toggle_checklist_item"),
@@ -43,4 +43,6 @@ urlpatterns = [
         views.checklist_create_form,
         name="checklist_create_form",
     ),
+    path("clear_checklist_form/", views.clear_checklist_form, name="clear_checklist_form"),
+
 ]
