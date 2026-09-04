@@ -59,12 +59,14 @@
                                             type="button"
                                             class="btn btn-sm btn-outline-primary"
                                             hx-get="{% url 'tasks:create_checklist' task_id=task.id %}"
-                                            hx-target="#task-checklist-content"
+                                            hx-target="#task-checklist-create-form"
                                             hx-swap="innerHTML"
                                         >
                                             + Добавить чеклист
                                         </button>
                                     </div>
+
+                                    <div id="task-checklist-create-form"></div>
 
                                     <div id="task-checklist-content">
                                         {% for checklist in task.checklists.all %}

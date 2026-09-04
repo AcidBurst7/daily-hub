@@ -343,34 +343,61 @@ def create_checklist(request, task_id: int):
         id=task_id,
         column__board__user=request.user
     )
-    
+
+    form = ChecklistEditForm()
+
     if request.method == "POST":
         checklist = CheckList.objects.create(
             task=task,
             name=request.POST.get("name")
         )
-
         return render(
-                request,
-                "tasks/partials/checklist.html",{
-                    "checklist": checklist
-                },
-            )
+            request,
+            "tasks/partials/checklist.html",{
+                "checklist": checklist
+            },
+        )
     return render(
         request,
         "tasks/partials/forms/checklist_create_form.html",
         {
             "task": task,
+            "form": form
         },
     )
 
 @login_required
-def edit_checklist_name(request, checklist_id: int = 0):
-    ...
-
+def edit_checklist(request, checklist_id: int):
+    checklist = get_object_or_404(
+        CheckList, 
+        id=checklist_id,
+        task__column__board__user=request.user
+    )
+    if request.method == "POST":
+        checklist.name = request.POST.get("name")
+        checklist.save(update_fields=["name"])
+        return render(
+            request,
+            "tasks/partials/checklist.html", {
+                "checklist": checklist
+            },
+        )
+    task = Task.objects.get(id=checklist.task.id)
+    form = ChecklistEditForm(initial={"name": checklist.name})
+    return render(
+        request,
+        "tasks/partials/forms/checklist_create_form.html", 
+        {
+            "task": task,
+            "form": form
+        },
+    )
+    
 @login_required
 def delete_checklist(request, checklist_id: int = 0):
-    ...
+    checklist = CheckList.objects.get(id=checklist_id)
+    checklist.delete
+    return HttpResponse("") 
 
 @login_required
 def create_checklist_item_form(request, checklist_id: int = 0):

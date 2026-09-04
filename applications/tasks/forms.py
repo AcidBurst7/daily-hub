@@ -86,7 +86,7 @@ class ChecklistEditForm(forms.ModelForm):
     class Meta:
         model = CheckList
         fields = ["name"]
-        labels = {"name": "Название"}
+        labels = {"name": "Название чек-листа"}
         widgets = {
             "name": forms.TextInput(
                 attrs={"class": "form-control"}

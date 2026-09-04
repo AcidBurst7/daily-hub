@@ -22,7 +22,7 @@
             <button
                 type="button"
                 class="btn btn-sm btn-outline-secondary"
-                hx-get="{% url 'tasks:edit_checklist_name' checklist_id=checklist.id %}"
+                hx-get="{% url 'tasks:edit_checklist' checklist_id=checklist.id %}"
                 hx-target="#checklist-title-{{ checklist.id }}"
                 hx-swap="innerHTML"
             >
@@ -33,7 +33,7 @@
                 type="button"
                 class="btn btn-sm btn-outline-danger"
                 hx-delete="{% url 'tasks:delete_checklist' checklist_id=checklist.id %}"
-                hx-target="#checklist-{{ checklist.id }}"
+                hx-target="#task-checklist-create-form"
                 hx-swap="outerHTML"
                 hx-confirm="Удалить весь чеклист?"
             >
