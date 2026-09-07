@@ -24,6 +24,7 @@ urlpatterns = [
 
     path("create_checklist/<int:task_id>/", views.create_checklist, name="create_checklist"),
     path("edit_checklist/<int:checklist_id>/", views.edit_checklist, name="edit_checklist"),
+    path("checklist/<int:checklist_id>/title/", views.get_checklist_title, name="get_checklist_title"),
 
     path("delete_checklist/<int:checklist_id>/", views.delete_checklist, name="delete_checklist"),
     path("create_checklist_item_form/<int:checklist_id>/", views.create_checklist_item_form, name="create_checklist_item_form"),

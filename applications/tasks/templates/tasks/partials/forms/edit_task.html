@@ -69,7 +69,7 @@
                                     <div id="task-checklist-create-form"></div>
 
                                     <div id="task-checklist-content">
-                                        {% for checklist in task.checklists.all %}
+                                        {% for checklist in checklists %}
                                             {% include "tasks/partials/checklist.html" %}
                                         {% empty %}
                                             <div class="text-muted small">

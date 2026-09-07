@@ -1,9 +1,9 @@
 <div class="card bg-light border-0">
     <div class="card-body">
         <form
-            hx-post="{% url 'tasks:create_checklist' task_id=task.id %}"
-            hx-target="#task-checklist-create-form"
-            hx-swap="innerHTML"
+            hx-post="{% if is_edit %}{% url 'tasks:edit_checklist' checklist_id=checklist.id %}{% else %}{% url 'tasks:create_checklist' task_id=task.id %}{% endif %}"
+            hx-target="{% if is_edit %}#checklist-title-{{ checklist.id }}{% else %}#task-checklist-create-form{% endif %}"
+            hx-swap="outerHTML"
         >
             {% csrf_token %}
 
@@ -11,18 +11,34 @@
                 {{ form.name }}
 
                 <button type="submit" class="btn btn-primary">
-                    Создать
+                    {% if is_edit %}
+                        Сохранить
+                    {% else %}
+                        Создать
+                    {% endif %}
                 </button>
 
-                <button
-                    type="button"
-                    class="btn btn-outline-secondary"
-                    hx-get="{% url 'tasks:clear_modal' %}"
-                    hx-target="#task-checklist-create-form"
-                    hx-swap="innerHTML"
-                >
-                    Отмена
-                </button>
+                {% if is_edit %}
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        hx-get="{% url 'tasks:get_checklist_title' checklist_id=checklist.id %}"
+                        hx-target="#checklist-title-{{ checklist.id }}"
+                        hx-swap="innerHTML"
+                    >
+                        Отмена
+                    </button>
+                {% else %}
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        hx-get="{% url 'tasks:clear_modal' %}"
+                        hx-target="#task-checklist-create-form"
+                        hx-swap="innerHTML"
+                    >
+                        Отмена
+                    </button>
+                {% endif %}
             </div>
         </form>
     </div>
