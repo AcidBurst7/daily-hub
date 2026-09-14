@@ -41,19 +41,9 @@ def index(request):
         }
     )
 
-@login_required
-def columns(request, board_id: int):
-    columns = Column.objects.filter(board=board_id)
-    return render(
-        request,
-        'tasks/index.html',
-        {
-            'section': 'tasks', 
-            'columns': columns,
-            'data': get_user_boards(request.user),
-            'create_board_form': BoardEditForm()
-        }
-    )
+'''
+Доски
+'''
 
 @login_required
 def create_board(request):
@@ -140,6 +130,24 @@ def delete_board(request, board_id: int):
         Board.objects.filter(id=board_id).delete()
     return redirect("tasks:index")
 
+'''
+Колонки
+'''
+
+@login_required
+def columns(request, board_id: int):
+    columns = Column.objects.filter(board=board_id)
+    return render(
+        request,
+        'tasks/index.html',
+        {
+            'section': 'tasks', 
+            'columns': columns,
+            'data': get_user_boards(request.user),
+            'create_board_form': BoardEditForm()
+        }
+    )
+
 @login_required
 def create_column(request, board_id: int):
     if request.method == 'POST':
@@ -191,6 +199,10 @@ def delete_column(request, column_id: int):
         column = Column.objects.get(id=column_id)
         column.delete()
         return redirect(f"{reverse("tasks:index")}?board={column.board.id}")
+
+'''
+Задачи
+'''
 
 @login_required
 def create_task(request, column_id: int):
@@ -338,6 +350,10 @@ def delete_task(request, task_id):
         f"{reverse("tasks:index")}?board={task.column.board.id}"
     )
 
+'''
+Чеклисты
+'''
+
 @login_required
 def create_checklist(request, task_id: int):
     task = get_object_or_404(
@@ -434,30 +450,43 @@ def delete_checklist(request, checklist_id: int):
 
     return HttpResponse("")
 
-@login_required
-def create_checklist_item_form(request, checklist_id: int = 0):
-    ...
+'''
+Пункты чеклистов
+'''
 
 @login_required
-def create_checklist_item(request, checklist_id: int = 0):
-    ...
+def create_checklistitem(request, checklist_id: int):
+    checklist = get_object_or_404(
+        CheckList, 
+        id=checklist_id,
+        task__column__board__user=request.user
+    )
+
+    form = ChecklistEditForm()
+
+    if request.method == "POST":
+        checklistitem = CheckListItem.objects.create(
+            checklist=checklist,
+            title=request.POST.get("name")
+        )
+        
+        return render(
+            request,
+            "tasks/partials/checklist.html", {
+                "checklist": checklist,
+            },
+        )
+    
+    # checklistitems = CheckListItem.objects.filter(checklist=checklistitem)
+    return render(
+        request,
+        "tasks/partials/forms/checklist_create_form.html",
+        {
+            "checklistitems": checklist.items,
+            "form": form
+        },
+    )
 
 @login_required
-def clear_checklist_item_form(request):
-    ...
-
-@login_required
-def toggle_checklist_item(request, item_id: int = 0):
-    ...
-
-@login_required
-def delete_checklist_item(request, item_id: int = 0):
-    ...
-
-@login_required
-def checklist_create_form(request, task_id: int = 0):
-    ...
-
-@login_required
-def clear_checklist_form(request):
+def create_checklist_item_form(request, checklist_id: int):
     ...

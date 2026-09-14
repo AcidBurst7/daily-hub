@@ -25,26 +25,10 @@ urlpatterns = [
     path("create_checklist/<int:task_id>/", views.create_checklist, name="create_checklist"),
     path("edit_checklist/<int:checklist_id>/", views.edit_checklist, name="edit_checklist"),
     path("checklist/<int:checklist_id>/title/", views.get_checklist_title, name="get_checklist_title"),
-
     path("delete_checklist/<int:checklist_id>/", views.delete_checklist, name="delete_checklist"),
+
+
+    path("create_checklistitem/<int:checklist_id>/", views.create_checklistitem, name="create_checklistitem"),
     path("create_checklist_item_form/<int:checklist_id>/", views.create_checklist_item_form, name="create_checklist_item_form"),
-    path("create_checklist_item/<int:checklist_id>/", views.create_checklist_item, name="create_checklist_item"),
-    path("clear_checklist_item_form/", views.clear_checklist_item_form, name="clear_checklist_item_form"),
     
-    path("toggle_checklist_item/<int:item_id>/",
-        views.toggle_checklist_item,
-        name="toggle_checklist_item"),
-
-    path("delete_checklist_item/<int:item_id>/",
-        views.delete_checklist_item,
-        name="delete_checklist_item"),
-
-    path(
-        "checklist_create_form/<int:task_id>/",
-        views.checklist_create_form,
-        name="checklist_create_form",
-    ),
-    
-    path("clear_checklist_form/", views.clear_checklist_form, name="clear_checklist_form"),
-
 ]
