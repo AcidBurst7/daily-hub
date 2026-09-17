@@ -61,6 +61,21 @@ class CheckList(models.Model):
     )
     name = models.CharField(max_length=100)
 
+    @property
+    def total_count(self):
+        return self.items.count()
+
+    @property
+    def completed_count(self):
+        return self.items.filter(done=True).count()
+
+    @property
+    def progress_percentage(self):
+        total = self.total_count
+        if total == 0:
+            return 0
+        return int((self.completed_count / total) * 100)
+
 
 class CheckListItem(models.Model):
     checklist = models.ForeignKey(
@@ -70,4 +85,8 @@ class CheckListItem(models.Model):
     )
     title = models.CharField(max_length=250)
     done = models.BooleanField(default=False)
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["order"]
     

@@ -1,9 +1,22 @@
-<div id="checklist-title-{{ checklist.id }}">
-    <h5 class="mb-1">
-        {{ checklist.name }}
-    </h5>
+<div id="checklist-title-{{ checklist.id }}" class="w-100 me-3">
+    <div class="d-flex justify-content-between align-items-center mb-1">
+        <h5 class="mb-1">
+            {{ checklist.name }}
+        </h5>
 
-    <small class="text-muted">
-        {{ checklist.items.count }} пунктов
-    </small>
+        <small class="text-muted">
+            {{ checklist.completed_count }} / {{ checklist.total_count }} пунктов
+        </small>
+    </div>
+
+    <div class="progress progress-sm">
+        <div 
+            class="progress-bar bg-primary"
+            style="width : {{ checklist.progress_percentage }}%"
+            role="progressbar"
+            aria-valuenow="{{ checklist.progress_percentage }}"
+            aria-valuemin="0"
+            aria-valuemax="100"
+        ></div>
+    </div>
 </div>

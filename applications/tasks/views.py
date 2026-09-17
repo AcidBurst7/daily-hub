@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, HttpResponse
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_GET, require_http_methods
 from .models import Board, Column, Task, CheckList, CheckListItem
 from .forms import (
     BoardEditForm, 
@@ -41,9 +41,11 @@ def index(request):
         }
     )
 
-'''
-Доски
-'''
+
+# ----------------------------------------------------------------------
+# Доски (Boards)
+# ----------------------------------------------------------------------
+
 
 @login_required
 def create_board(request):
@@ -130,9 +132,11 @@ def delete_board(request, board_id: int):
         Board.objects.filter(id=board_id).delete()
     return redirect("tasks:index")
 
-'''
-Колонки
-'''
+
+# ----------------------------------------------------------------------
+# Колонки (Columns)
+# ----------------------------------------------------------------------
+
 
 @login_required
 def columns(request, board_id: int):
@@ -200,9 +204,11 @@ def delete_column(request, column_id: int):
         column.delete()
         return redirect(f"{reverse("tasks:index")}?board={column.board.id}")
 
-'''
-Задачи
-'''
+
+# ----------------------------------------------------------------------
+# Задачи (Tasks)
+# ----------------------------------------------------------------------
+
 
 @login_required
 def create_task(request, column_id: int):
@@ -350,65 +356,52 @@ def delete_task(request, task_id):
         f"{reverse("tasks:index")}?board={task.column.board.id}"
     )
 
-'''
-Чеклисты
-'''
+
+# ----------------------------------------------------------------------
+# Чеклисты (CheckList)
+# ----------------------------------------------------------------------
+
 
 @login_required
+@require_http_methods(["GET", "POST"])
 def create_checklist(request, task_id: int):
-    task = get_object_or_404(
-        Task, 
-        id=task_id,
-        column__board__user=request.user
-    )
-
-    form = ChecklistEditForm()
+    """Отображение формы и создание нового чеклиста для задачи."""
+    task = get_object_or_404(Task, id=task_id)
 
     if request.method == "POST":
-        checklist = CheckList.objects.create(
-            task=task,
-            name=request.POST.get("name")
-        )
-        # checklist = CheckList.objects.filter(task=task_id)
-        return render(
-            request,
-            "tasks/partials/checklist.html", {
-                "checklist": checklist,
-            },
-        )
+        form = ChecklistEditForm(request.POST)
+        if form.is_valid():
+            checklist = form.save(commit=False)
+            checklist.task = task
+            checklist.save()
+            return render(
+                request,
+                "tasks/partials/checklist.html", 
+                {"checklist": checklist},
+            )
+    else:
+        form = ChecklistEditForm()
     
-    checklists = CheckList.objects.filter(task=task_id)
     return render(
         request,
         "tasks/partials/forms/checklist_create_form.html",
-        {
-            "task": task,
-            "checklist": checklists,
-            "form": form
-        },
+        {"task": task, "is_edit": False, "form": form},
     )
 
 @login_required
+@require_http_methods(["GET", "POST"])
 def edit_checklist(request, checklist_id: int):
-    checklist = get_object_or_404(
-        CheckList, 
-        id=checklist_id,
-        task__column__board__user=request.user
-    )
-    if request.method == "POST":
-        form = ChecklistEditForm(
-            request.POST,
-            instance=checklist
-        )
+    """Редактирование названия чеклиста."""
+    checklist = get_object_or_404(CheckList, id=checklist_id)
 
+    if request.method == "POST":
+        form = ChecklistEditForm(request.POST, instance=checklist)
         if form.is_valid():
-            form.save()
-        
+            checklist = form.save()
             return render(
                 request,
-                "tasks/partials/checklist_title.html", {
-                    "checklist": checklist,
-                },
+                "tasks/partials/checklist_title.html", 
+                {"checklist": checklist},
             )
     else:
         form = ChecklistEditForm(instance=checklist)
@@ -416,21 +409,14 @@ def edit_checklist(request, checklist_id: int):
     return render(
         request,
         "tasks/partials/forms/checklist_create_form.html", 
-        {
-            "checklist": checklist,
-            "task": checklist.task,
-            "form": form,
-            "is_edit": True,
-        },
+        {"checklist": checklist, "form": form, "is_edit": True},
     )
 
 @login_required
+@require_GET
 def get_checklist_title(request, checklist_id: int):
-    checklist = get_object_or_404(
-        CheckList,
-        id=checklist_id,
-        task__column__board__user=request.user
-    )
+    """Отмена редактирования названия чеклиста (возвращает плашку названия back)."""
+    checklist = get_object_or_404(CheckList, id=checklist_id)
     return render(
         request,
         "tasks/partials/checklist_title.html",
@@ -438,55 +424,73 @@ def get_checklist_title(request, checklist_id: int):
     )
     
 @login_required
+@require_http_methods(["DELETE"])
 def delete_checklist(request, checklist_id: int):
-    checklist = get_object_or_404(
-        CheckList, 
-        id=checklist_id,
-        task__column__board__user=request.user
-    )
-    
-    if request.method == "DELETE":
-        checklist.delete()
-
+    """Удаление чеклиста."""
+    checklist = get_object_or_404(CheckList, id=checklist_id)
+    checklist.delete()
     return HttpResponse("")
 
-'''
-Пункты чеклистов
-'''
+
+# ----------------------------------------------------------------------
+# Пункты чеклиста (CheckListItem)
+# ----------------------------------------------------------------------
 
 @login_required
-def create_checklistitem(request, checklist_id: int):
-    checklist = get_object_or_404(
-        CheckList, 
-        id=checklist_id,
-        task__column__board__user=request.user
-    )
-
-    form = ChecklistEditForm()
-
-    if request.method == "POST":
-        checklistitem = CheckListItem.objects.create(
-            checklist=checklist,
-            title=request.POST.get("name")
-        )
-        
-        return render(
-            request,
-            "tasks/partials/checklist.html", {
-                "checklist": checklist,
-            },
-        )
-    
-    # checklistitems = CheckListItem.objects.filter(checklist=checklistitem)
+@require_GET
+def create_checklist_item_form(request, checklist_id: int):
+    """Возвращает форму быстрого добавления нового пункта."""
+    checklist = get_object_or_404(CheckList, id=checklist_id)
     return render(
         request,
-        "tasks/partials/forms/checklist_create_form.html",
-        {
-            "checklistitems": checklist.items,
-            "form": form
-        },
+        "tasks/partials/forms/checklist_item_form.html",
+        {"checklist": checklist},
     )
 
+
+@require_GET
+def clear_checklist_item_form(request):
+    """Очищает (закрывает) форму добавления нового пункта."""
+    return HttpResponse("")
+
+
 @login_required
-def create_checklist_item_form(request, checklist_id: int):
-    ...
+@require_POST
+def create_checklist_item(request, checklist_id: int):
+    """Создание нового пункта чеклиста."""
+    checklist = get_object_or_404(CheckList, id=checklist_id)
+    title = request.POST.get("title", "").strip()
+
+    if title:
+        item = CheckListItem.objects.create(checklist=checklist, title=title)
+        return render(
+            request,
+            "tasks/partials/checklist_item.html", 
+            {"checklist": checklist, "item": item},
+        )
+    
+    return HttpResponse("", status=400)
+
+
+@login_required
+@require_POST
+def toggle_checklist_item(request, item_id: int):
+    """Переключение состояния done/undone у пункта."""
+    item = get_object_or_404(CheckListItem, id=item_id)
+    item.done = not item.done
+    item.save()
+
+    return render(
+        request,
+        "tasks/partials/checklist.html",
+        {"checklist": item.checklist}
+    )
+
+
+@login_required
+@require_http_methods(["DELETE"])
+def delete_checklist_item(request, item_id: int):
+    """Удаление пункта чеклиста."""
+    item = get_object_or_404(CheckListItem, id=item_id)
+    item.delete()
+    return HttpResponse("")
