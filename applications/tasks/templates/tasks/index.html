@@ -201,8 +201,30 @@
                                                                             {{ task.description }}
                                                                         </div>
                                                                     {% endif %}
+
+                                                                    {% for checklist in task.checklists.all %}
+                                                                        <h3 class="divide-y-2 mt-4">
+                                                                            {{ checklist.name }}
+                                                                        </h3>
+                                                                        <div class="divide-y-2 mt-2">
+                                                                            {% for checklist_item in checklist.items.all %}
+                                                                            <div class="px-2">
+                                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" class="icon text-muted"><path d="M5 12l5 5l10 -10"></path></svg>
+                                                                                <span class="text-secondary {% if checklist_item.done %}text-decoration-line-through{% endif %}">
+                                                                                    {{ checklist_item.title }}
+                                                                                </span>
+                                                                            </div>
+                                                                            {% comment %} {% empty %}
+                                                                                <div class="px-3">
+                                                                                    <span class="text-secondary">
+                                                                                        Пока нет записей
+                                                                                    </span>
+                                                                                </div> {% endcomment %}
+                                                                            {% endfor %}
+                                                                        </div>
+                                                                        
+                                                                    {% endfor %}
                                                                 </div>
-                                                                
                                                             </div>
                                                         </div>
                                                         <div class="col-auto d-flex">
@@ -248,8 +270,7 @@
                                                             </a>
                                                         </div>
                                                     </div>
-                                                    
-                                                    
+
                                                     {% if task.deadline %}
                                                     <div class="mt-4">
                                                         <div class="row">
