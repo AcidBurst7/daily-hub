@@ -29,4 +29,6 @@ jobs:
               -f docker-compose.prod.yml \
               up -d --build
 
+            docker restart dailyhub_nginx
+
             docker image prune -f
