@@ -174,3 +174,62 @@
 .apexcharts-inactive-legend {
   opacity: 0.45;
 }
+
+
+
+@media (max-width: 576px) {
+    .card-md {
+        width: 100%;
+        margin: 0;
+    }
+
+    .card-md .card-body {
+        padding: 1.25rem;
+    }
+
+    .card-md h2 {
+        font-size: 1.35rem;
+        line-height: 1.3;
+    }
+
+    .card-md .form-control {
+        width: 100%;
+        font-size: 16px;
+    }
+
+    .card-md .form-footer {
+        margin-top: 1rem;
+    }
+}
+
+
+.login-card {
+    width: 100%;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.login-card .card-body {
+    padding: 2rem;
+}
+
+.login-register {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+@media (max-width: 576px) {
+    .login-card .card-body {
+        padding: 1.25rem;
+    }
+
+    .login-card h2 {
+        font-size: 1.35rem;
+        line-height: 1.3;
+    }
+
+    .desktop-break {
+        display: none;
+    }
+}
