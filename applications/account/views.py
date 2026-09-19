@@ -46,11 +46,6 @@ def dashboard(request):
             created_at__date=today
         ).count(),
 
-        "yesterday_tasks": Task.objects.filter(
-            column__board__user=user,
-            created_at__date=yesterday
-        ).count(),
-
         "deadlines": Task.objects.filter(
             column__board__user=user,
             deadline__isnull=False,
