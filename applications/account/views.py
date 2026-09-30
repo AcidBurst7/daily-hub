@@ -37,8 +37,7 @@ def dashboard(request):
 
         "active_tasks": Task.objects.filter(
             column__board__user=user,
-            completed_at__isnull=True,
-            is_archived=False
+            completed_at__isnull=True
         ).count(),
 
         "today_tasks": Task.objects.filter(
@@ -46,9 +45,9 @@ def dashboard(request):
             created_at__date=today
         ).count(),
 
-        "deadlines": Task.objects.filter(
+        "without_deadlines": Task.objects.filter(
             column__board__user=user,
-            deadline__isnull=False,
+            deadline__isnull=True,
             completed_at__isnull=True
         ).count(),
     }

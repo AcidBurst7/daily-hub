@@ -1,10 +1,10 @@
 DailyHub — Сделано
 
-[ ] Основной функционал работает
-[ ] Авторизация работает
-[ ] PostgreSQL
-[ ] Docker Compose
-[ ] Production deployment
+[x] Основной функционал работает
+[x] Авторизация работает
+[x] PostgreSQL
+[x] Docker Compose
+[x] Production deployment
 [ ] HTTPS
 [ ] REST API
 [ ] Swagger/OpenAPI
