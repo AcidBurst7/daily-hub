@@ -12,3 +12,7 @@ class Profile(models.Model):
         blank=True
     )
 
+    class Meta:
+        def __str__(self):
+            return self.user.login
+

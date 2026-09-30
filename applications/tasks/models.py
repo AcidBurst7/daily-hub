@@ -10,6 +10,10 @@ class Board(models.Model):
         related_name="boards",
     )
 
+    class Meta:
+        verbose_name = "Доска"
+        verbose_name_plural = "Доски"
+
     def __str__(self):
         return self.name
 
@@ -28,6 +32,8 @@ class Column(models.Model):
     
     class Meta:
         ordering = ["order"]
+        verbose_name = "Колонка"
+        verbose_name_plural = "Колонки"
 
 
 class Task(models.Model):
@@ -51,6 +57,8 @@ class Task(models.Model):
     
     class Meta:
         ordering = ["order"]
+        verbose_name = "Задача"
+        verbose_name_plural = "Задачи"
 
 
 class CheckList(models.Model):
@@ -60,6 +68,10 @@ class CheckList(models.Model):
         related_name="checklists"
     )
     name = models.CharField(max_length=100)
+
+    class Meta:
+        verbose_name = "Чек-лист"
+        verbose_name_plural = "Чек-листы"
 
     @property
     def total_count(self):
@@ -89,4 +101,6 @@ class CheckListItem(models.Model):
 
     class Meta:
         ordering = ["order"]
+        verbose_name = "Пункт чек-листа"
+        verbose_name_plural = "Пункты чек-листа"
     
