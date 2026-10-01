@@ -13,6 +13,7 @@ from .forms import (
     ChecklistEditForm,
     ChecklistItemEditForm,
 )
+from .tasks import task_created
 
 def get_user_boards(user):
     return (
@@ -228,6 +229,8 @@ def create_task(request, column_id: int):
             task.column = column
             task.order = column.tasks.count()  # добавляем в конец списка
             task.save()
+
+            task_created.delay(task.id)
             
             response = HttpResponse()
             response["HX-Redirect"] = f"{reverse("tasks:index")}?board={task.column.board.id}"
