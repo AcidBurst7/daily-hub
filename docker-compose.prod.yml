@@ -56,6 +56,17 @@ services:
     depends_on:
       - web
 
+  rabbitmq:
+    image: rabbitmq:4-management
+    container_name: dailyhub_rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    expose:
+      - "5672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
 
 volumes:
+  rabbitmq_data:
   postgres_data:

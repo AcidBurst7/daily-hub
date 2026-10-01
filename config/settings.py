@@ -171,12 +171,18 @@ REDIS_HOST = env("REDIS_HOST")
 REDIS_PORT = env.int("REDIS_PORT")
 REDIS_DB = env.int("REDIS_DB", default=1)
 
-CELERY_BROKER_URL = env(
-    "CELERY_BROKER_URL",
-    default="redis://redis:6379/0"
+# CELERY_BROKER_URL = env(
+#     "CELERY_BROKER_URL",
+#     default="redis://redis:6379/0"
+# )
+CELERY_BROKER_URL = (
+    f"amqp://{env("RABBITMQ_USER")}:"
+    f"{env("RABBITMQ_PASSWORD")}"
+    "@rabbitmq:5672//"
 )
 
 CELERY_RESULT_BACKEND = env(
     "CELERY_RESULT_BACKEND",
     default="redis://redis:6379/0"
 )
+
