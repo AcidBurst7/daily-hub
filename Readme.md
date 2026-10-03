@@ -74,31 +74,49 @@ Daily Hub — веб-приложение для организации зада
 - CRUD задач
 - дедлайны
 - цветовые метки
+- создание чек-листов и пунктов для них
 
 ---
 
-## Используемые технологии
+## 🛠️ Используемые технологии
 
-### Backend
+### 🐍 Backend
 
-- Python 3.12
-- Django 5.2
-- PostgreSQL
-- Gunicorn
+- **Python 3.12** — основной язык разработки
+- **Django 5.2** — веб-фреймворк и бизнес-логика
+- **Django ORM** — работа с базой данных
+- **Gunicorn** — WSGI-сервер
 
-### Frontend
+### 🎨 Frontend
 
-- HTML
-- CSS
-- JavaScript
-- Django Templates
+- **HTML5**
+- **CSS3**
+- **JavaScript**
+- **Django Templates** — серверный рендеринг
+- **HTMX** — динамическое обновление интерфейса без полноценного SPA
 
-### Infrastructure
+### 🗄️ Хранение данных
 
-- Docker
-- Docker Compose
-- Nginx
-- GitHub Actions (планируется)
+- **PostgreSQL** — основная база данных
+- **Redis** — брокер/хранилище для фоновых задач и кеширования
+
+### ⚙️ Фоновые задачи
+
+- **Celery** — выполнение фоновых и отложенных задач
+- **RabbitMQ** — брокер сообщений
+
+### 🐳 Infrastructure & DevOps
+
+- **Docker** — контейнеризация приложения
+- **Docker Compose** — оркестрация сервисов
+- **Nginx** — reverse proxy и раздача статических файлов
+- **Linux** — production-окружение
+- **Git** — контроль версий
+
+
+### 📦 Дополнительные инструменты
+
+- **OpenAPI / Swagger** — документация REST API
 
 ---
 
@@ -175,11 +193,11 @@ daily-hub/
 └── README.md            # 📖 Документация проекта
 ```
 
-```markdown
-Проект разделён на отдельные Django-приложения и конфигурационный слой. 
+Проект разделён на отдельные Django-приложения (/applications) и 
+конфигурационный слой (config). 
 Инфраструктурные компоненты (Nginx, Docker, Celery, RabbitMQ, Redis) 
 вынесены отдельно от бизнес-логики приложения.
-```
+
 
 ---
 
@@ -205,17 +223,11 @@ docker compose -f docker-compose.prod.yml up -d
 
 ```
 DEBUG=False
-
 SECRET_KEY=...
-
 DB_NAME=dailyhub
-
 DB_USER=postgres
-
 DB_PASSWORD=...
-
 DB_HOST=postgres
-
 DB_PORT=5432
 ```
 
@@ -245,15 +257,6 @@ DB_PORT=5432
 
 - [ ] HTTPS
 - [ ] Monitoring
-
----
-
-## Документация
-
-- Architecture
-- Deployment
-- Docker
-- Database
 
 ---
 
