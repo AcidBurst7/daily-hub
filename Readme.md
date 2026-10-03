@@ -139,21 +139,39 @@ Daily Hub — веб-приложение для организации зада
 
 ---
 
-## Структура проекта
+## 📁 Структура проекта
 
-applications/
-
-config/
-
-templates/
-
-static/
-
-media/
-
-nginx/
-
-scripts/
+daily-hub/
+│
+├── applications/       # 🧩 Django-приложения и бизнес-логика
+│   ├── account/        # Аутентификация и управление пользователями
+│   └── tasks/          # Доски, колонки, задачи и чек-листы
+│
+├── config/             # ⚙️ Конфигурация Django-проекта
+│   ├── settings/       # Настройки окружения
+│   ├── urls.py         # Маршрутизация
+│   ├── celery.py       # Конфигурация Celery
+│   └── wsgi.py         # WSGI-конфигурация
+│
+├── templates/          # 🎨 HTML-шаблоны
+│
+├── static/             # 🎨 Статические файлы
+│   ├── css/
+│   ├── js/
+│   └── images/
+│
+├── media/              # 📎 Загружаемые пользователем файлы
+│
+├── nginx/              # 🌐 Конфигурация Nginx
+│
+├── scripts/             # 🛠️ Скрипты для запуска и обслуживания проекта
+│
+├── screenshots/        # 📸 Скриншоты интерфейса
+│
+├── docker-compose.yml  # 🐳 Конфигурация Docker-сервисов
+├── Dockerfile          # 📦 Образ приложения
+├── manage.py            # 🧰 Django CLI
+└── README.md            # 📖 Документация проекта
 
 ---
 
@@ -208,10 +226,8 @@ DB_PORT=5432
 ### Version 2
 
 - [x] Архивирование задач
-- [ ] Dashboard
+- [x] Dashboard
 - [x] Drag&Drop
-- [ ] Поиск
-- [ ] Фильтрация
 - [x] CI/CD
 - [x] VPS Deploy
 
