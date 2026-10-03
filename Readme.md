@@ -211,7 +211,7 @@ docker compose up --build
 
 ---
 
-## Production
+## Запуск в производственной среде
 
 ```bash
 docker compose -f docker-compose.prod.yml up -d
@@ -230,33 +230,6 @@ DB_PASSWORD=...
 DB_HOST=postgres
 DB_PORT=5432
 ```
-
----
-
-## Roadmap
-
-### Version 1
-
-- [x] Авторизация
-- [x] Профиль
-- [x] Kanban
-- [x] Docker
-- [x] PostgreSQL
-
-### Version 2
-
-- [x] Архивирование задач
-- [ ] Dashboard
-- [x] Drag&Drop
-- [ ] Поиск
-- [ ] Фильтрация
-- [x] CI/CD
-- [x] VPS Deploy
-
-### Version 3
-
-- [ ] HTTPS
-- [ ] Monitoring
 
 ---
 
