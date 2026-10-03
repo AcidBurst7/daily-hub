@@ -141,6 +141,7 @@ Daily Hub — веб-приложение для организации зада
 
 ## 📁 Структура проекта
 
+```text
 daily-hub/
 │
 ├── applications/       # 🧩 Django-приложения и бизнес-логика
@@ -172,6 +173,7 @@ daily-hub/
 ├── Dockerfile          # 📦 Образ приложения
 ├── manage.py            # 🧰 Django CLI
 └── README.md            # 📖 Документация проекта
+
 
 ---
 
@@ -226,8 +228,10 @@ DB_PORT=5432
 ### Version 2
 
 - [x] Архивирование задач
-- [x] Dashboard
+- [ ] Dashboard
 - [x] Drag&Drop
+- [ ] Поиск
+- [ ] Фильтрация
 - [x] CI/CD
 - [x] VPS Deploy
 
