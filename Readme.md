@@ -12,21 +12,45 @@
 
 ## 📸 Скриншоты
 
-### 📋 Управление задачами
+### 📊 Основной интерфейс
 
 <p align="center">
-  <img src="screenshots/tasks-page.jpg" width="48%" />
-  <img src="screenshots/dashboard-page.jpg" width="48%" />
+  <img src="screenshots/dashboard-page.jpg" alt="Главная страница" width="48%">
+  <img src="screenshots/tasks-page.jpg" alt="Страница задач" width="48%">
+</p>
+
+### 📋 Работа с задачами
+
+<p align="center">
+  <img src="screenshots/create-task.jpg" alt="Создание задачи" width="48%">
+  <img src="screenshots/edit-task.jpg" alt="Редактирование задачи" width="48%">
 </p>
 
 <p align="center">
-  <img src="screenshots/edit-task-checklist.jpg" width="48%" />
-  <img src="screenshots/edit-task.jpg" width="48%" />
+  <img src="screenshots/edit-task-checklist.jpg" alt="Чек-лист задачи" width="48%">
 </p>
 
+### 🗂️ Работа с досками и колонками
+
 <p align="center">
-  <img src="screenshots/create-task.jpg" width="48%" />
+  <img src="screenshots/edit-board.jpg" alt="Редактирование доски" width="48%">
+  <img src="screenshots/edit-column.jpg" alt="Редактирование колонки" width="48%">
 </p>
+
+### 🔐 Аутентификация
+
+<p align="center">
+  <img src="screenshots/login-page.jpg" alt="Страница входа" width="48%">
+  <img src="screenshots/register-page.png" alt="Страница регистрации" width="48%">
+</p>
+
+### 🔑 Восстановление пароля
+
+<p align="center">
+  <img src="screenshots/reset-password-page.jpg" alt="Восстановление пароля" width="48%">
+  <img src="screenshots/reset-password-result-page.jpg" alt="Результат восстановления пароля" width="48%">
+</p>
+
 
 ## 📖 О проекте
 
