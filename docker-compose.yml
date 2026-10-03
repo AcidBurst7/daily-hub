@@ -39,6 +39,7 @@ services:
     depends_on:
       - redis
       - postgres
+      - rabbitmq
     env_file:
       - .env
 
@@ -50,6 +51,7 @@ services:
       - .env
     depends_on:
       - redis
+      - rabbitmq
 
   nginx:
     image: nginx:latest
