@@ -10,6 +10,24 @@
 
 ---
 
+## 📸 Скриншоты
+
+### 📋 Управление задачами
+
+<p align="center">
+  <img src="screenshots/tasks-page.jpg" width="48%" />
+  <img src="screenshots/dashboard-page.jpg" width="48%" />
+</p>
+
+<p align="center">
+  <img src="screenshots/edit-task-checklist.jpg" width="48%" />
+  <img src="screenshots/edit-task.jpg" width="48%" />
+</p>
+
+<p align="center">
+  <img src="screenshots/create-task.jpg" width="48%" />
+</p>
+
 ## 📖 О проекте
 
 Daily Hub — веб-приложение для организации задач по методологии Kanban.
